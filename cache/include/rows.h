@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <conversions.h>
+#include <enums.h>
 
 ///
 /// \brief The AffixRow struct represents common columns of rows for prefix, stem and suffix tables.
@@ -124,11 +125,11 @@ struct CompatibilityRulesRow {
     CompatibilityRulesRow()
         : category_id_1(0),
           category_id_2(0),
-          type(0),
+          type(),
           sources(),
           resulting_category(0),
           inflections() {}
-    CompatibilityRulesRow(uint64_t aCategoryId1, uint64_t aCategoryId2, uint8_t aType,
+    CompatibilityRulesRow(uint64_t aCategoryId1, uint64_t aCategoryId2, Rules aType,
                           const std::string& theSources, uint64_t aResultingCategory,
                           const std::wstring& theInflections)
         : category_id_1(aCategoryId1),
@@ -147,7 +148,7 @@ struct CompatibilityRulesRow {
 
     uint64_t category_id_1;
     uint64_t category_id_2;
-    uint8_t type;
+    Rules type;
     std::vector<bool> sources;
     uint64_t resulting_category;
     std::wstring inflections;

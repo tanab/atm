@@ -10,8 +10,16 @@
 #include <enums.h>
 #include <rows.h>
 
+using PrefixRows = std::list<PrefixRow>;
+using SuffixRows = std::list<SuffixRow>;
+
 using PrefixCategoryMap = std::multimap<uint64_t, PrefixCategoryRow>;
+using PrefixCategoryMapRange = std::pair<PrefixCategoryMap::iterator, PrefixCategoryMap::iterator>;
+
 using SuffixCategoryMap = std::multimap<uint64_t, SuffixCategoryRow>;
+
+using CompatibilityRulesKey = std::pair<uint64_t, Rules>;
+using CompatibilityRulesMap = std::multimap<CompatibilityRulesKey, CompatibilityRulesRow>;
 
 ///
 /// \brief The AtmCache class defines common interface for all cache implementations.
@@ -31,20 +39,19 @@ class AtmCache {
     /// \brief prefixTable returns all rows from the prefix table.
     /// \return list of rows in prefix table.
     ///
-    virtual const std::shared_ptr<std::list<PrefixRow>> prefixTable() const = 0;
+    virtual const std::shared_ptr<PrefixRows> prefixTable() const = 0;
     ///
     /// \brief suffixTable returns all rows from the suffix table.
     /// \return list of rows in suffix table.
     ///
-    virtual const std::shared_ptr<std::list<SuffixRow>> suffixTable() const = 0;
+    virtual const std::shared_ptr<SuffixRows> suffixTable() const = 0;
 
     ///
     /// \brief findPrefixCategories returns prefix_category rows for given \code prefix_id.
     /// \param prefix_id id of the prefix.
     /// \return pair of iterators that mark first and last row.
     ///
-    virtual const std::pair<PrefixCategoryMap::iterator, PrefixCategoryMap::iterator>
-    findPrefixCategories(uint64_t prefix_id) const = 0;
+    virtual const PrefixCategoryMapRange findPrefixCategories(uint64_t prefix_id) const = 0;
 
     ///
     /// \todo document the purpose and meaning. Original is isAcceptState from common/tree.h
