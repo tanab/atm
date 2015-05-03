@@ -26,6 +26,8 @@ set_target_properties(libgtest PROPERTIES
 )
 # I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
 include_directories("${source_dir}/include")
+# Make library visible via variable
+set(GTEST_LIBRARIES libgtest)
 
 # Download and install GoogleMock
 ExternalProject_Add(
@@ -49,3 +51,5 @@ set_target_properties(libgmock PROPERTIES
 )
 # I couldn't make it work with INTERFACE_INCLUDE_DIRECTORIES
 include_directories("${source_dir}/include")
+# Make library visible via variable
+set(GMOCK_LIBRARIES libgmock)

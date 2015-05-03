@@ -1,0 +1,24 @@
+Place dbitvec definition to appropriate place to be available across the project.
+
+Stemmer class reimplementation
+Macro definitions active:
+    RUNON_WORDS
+
+TreeSearch class reimplementation
+Macro definitions active:
+    MULTIPLICATION
+    REDUCE_THRU_DIACRITICS
+
+Node class reimplementation
+Macro definitions active:
+    EXTENSIVE_TREE
+
+ResultNode class reimplementation
+Macro definitions active:
+    REDUCE_THRU_DIACRITICS
+
+tree class reimplementation
+Macro definitions active:
+    REDUCE_THRU_DIACRITICS
+    LOAD_FROM_FILE
+
