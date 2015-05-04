@@ -74,13 +74,13 @@ class Tree {
     /// \param raw_data
     /// \param inflected_raw_data
     /// \param inflection_rule_description
-    /// \param curent_node
+    /// \param current_node
     /// \return new node.
     ///
     Node *addElement(const std::wstring &letters, uint64_t affix_id, uint64_t category_id,
                      uint64_t resulting_category_id, bool accepts_state,
                      const std::wstring &raw_data, const std::wstring &inflected_raw_data,
-                     const std::wstring &inflection_rule_description, Node *curent_node);
+                     const std::wstring &inflection_rule_description, Node *current_node);
 
     ///
     /// \todo Document purpose of this method.

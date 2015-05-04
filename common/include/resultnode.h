@@ -14,10 +14,11 @@ class ResultNode : public Node {
     /// \param accepts_state Whether to accept state.
     /// \param original_string The original string.
     /// \param inflected_string The inflected string.
+    /// \param inflection_rule The inflection rule.
     ///
-    explicit ResultNode(int64_t affix_id, int64_t previous_category_id, int64_t resulting_category_id,
+    explicit ResultNode(uint64_t affix_id, uint64_t previous_category_id, uint64_t resulting_category_id,
                bool accepts_state, const std::wstring& original_string,
-               const std::wstring& inflected_string);
+               const std::wstring& inflected_string, const std::wstring& inflection_rule);
 
     ///
     /// \brief ResultNode The copy constructor.
@@ -63,17 +64,17 @@ class ResultNode : public Node {
         m_previous_category_id = previous_category_id;
     }
 
-    inline int64_t previousCategoryId() const { return m_previous_category_id; }
+    inline uint64_t previousCategoryId() const { return m_previous_category_id; }
 
-    inline void setAffixId(int64_t affix_id) { m_affix_id = affix_id; }
+    inline void setAffixId(uint64_t affix_id) { m_affix_id = affix_id; }
 
-    inline int64_t affixId() const { return m_affix_id; }
+    inline uint64_t affixId() const { return m_affix_id; }
 
-    inline void setResultingCategoryId(int64_t resulting_category_id) {
+    inline void setResultingCategoryId(uint64_t resulting_category_id) {
         m_resulting_category_id = resulting_category_id;
     }
 
-    inline int64_t resultingCategoryId() const { return m_resulting_category_id; }
+    inline uint64_t resultingCategoryId() const { return m_resulting_category_id; }
 
     inline void setAcceptsState(bool accepts_state) { m_accepts_state = accepts_state; }
 
@@ -88,9 +89,9 @@ class ResultNode : public Node {
     inline const std::list<RawData>& rawData() const { return m_raw_data; }
 
   private:
-    int64_t m_previous_category_id;   //!< The previous category id.
-    int64_t m_affix_id;               //!< The affix id.
-    int64_t m_resulting_category_id;  //!< The resulting category id;
+    uint64_t m_previous_category_id;   //!< The previous category id.
+    uint64_t m_affix_id;               //!< The affix id.
+    uint64_t m_resulting_category_id;  //!< The resulting category id;
     bool m_accepts_state;             //!< Whether to accept state.
     std::wstring m_inflection_rule;   //!< The inflection rule.
     std::list<RawData> m_raw_data;    //!< The raw data.

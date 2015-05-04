@@ -3,14 +3,16 @@
 
 using namespace std;
 
-ResultNode::ResultNode(int64_t affix_id, int64_t previous_category_id,
-                       int64_t resulting_category_id, bool accepts_state,
-                       const wstring &original_string, const wstring &inflected_string)
+ResultNode::ResultNode(uint64_t affix_id, uint64_t previous_category_id,
+                       uint64_t resulting_category_id, bool accepts_state,
+                       const wstring &original_string, const wstring &inflected_string,
+                       const wstring &inflection_rule)
     : Node(),
       m_previous_category_id(previous_category_id),
       m_affix_id(affix_id),
       m_resulting_category_id(resulting_category_id),
-      m_accepts_state(accepts_state) {
+      m_accepts_state(accepts_state),
+      m_inflection_rule(inflection_rule) {
     addRawData(original_string, inflected_string);
 }
 
@@ -29,9 +31,7 @@ bool ResultNode::letterNode() const { return false; }
 wchar_t ResultNode::letter() const { return 0; }
 
 // TODO: Needs database or cache access implemented.
-wstring ResultNode::toString(bool /*affix*/) const {
-    return L"UNIMPLEMENTED";
-}
+wstring ResultNode::toString(bool /*affix*/) const { return L"UNIMPLEMENTED"; }
 
 void ResultNode::addRawData(const wstring &original_string, const wstring &inflected_string) {
     RawData r(original_string, inflected_string);
@@ -43,7 +43,7 @@ void ResultNode::addRawData(const wstring &original_string, const wstring &infle
 
 ResultNode *ResultNode::previousResultNode() const {
     Node *previous = this->parent();
-    while(previous != nullptr && previous->letterNode()) {
+    while (previous != nullptr && previous->letterNode()) {
         previous = previous->parent();
     }
     return dynamic_cast<ResultNode *>(previous);

@@ -1,4 +1,7 @@
-Place dbitvec definition to appropriate place to be available across the project.
+- Place dbitvec definition to appropriate place to be available across the project.
+- If reverse iterating is not necessary for result children of a node it might be better to use std::forward_list
+- Maybe result children and letter children should be kept by it's own pointers to avoid cast.
+
 
 Stemmer class reimplementation
 Macro definitions active:

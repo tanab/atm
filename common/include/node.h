@@ -86,6 +86,34 @@ class Node {
     ///
     inline Node *parent() const { return m_parent; }
 
+    ///
+    /// \brief letterChild returns letter child node for given letter.
+    /// \param letter letter to search children for.
+    /// \return the letter child if letter is found otherwise \code nullptr
+    ///
+    virtual inline Node *letterChild(wchar_t letter) const {
+        int index = letterIndex(letter);
+        return (index >= 0) ? m_letter_children.at(index) : nullptr;
+    }
+
+    ///
+    /// \brief resultChildren returns the reference to the list of result children.
+    /// We return reference for performance reasons to avoid unnecessary copying.
+    /// \return reference to the list of result children.
+    ///
+    std::list<Node *> & resultChildren() {
+        return m_result_children;
+    }
+
+    ///
+    /// \brief letterChildren returns the reference to the vector of letter children.
+    /// We return reference for performance reasons to avoid unnecessary copying.
+    /// \return reference to the vector of letter children.
+    ///
+    std::vector<Node *> & letterChildren() {
+        return m_letter_children;
+    }
+
   private:
     Node *m_parent;                         //!< The parent node.
     std::list<Node *> m_result_children;    //!< A list of result children.
