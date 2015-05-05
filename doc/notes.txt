@@ -1,7 +1,13 @@
+PRIORITY ONE
+- Refactor data cache structures to minimize it's number and simplify the code.
+
+PRIORITY TWO
 - Place dbitvec definition to appropriate place to be available across the project.
 - If reverse iterating is not necessary for result children of a node it might be better to use std::forward_list
 - Maybe result children and letter children should be kept by it's own pointers to avoid cast.
+- Some cache structures depend on id being continuous and to start with 1.
 
+typedefd class all_item_info renamed to FullItemInfo
 
 Stemmer class reimplementation
 Macro definitions active:

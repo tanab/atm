@@ -1,7 +1,7 @@
 #pragma once
 
 #include <atmcache.h>
-#include <enums.h>
+#include <enums.hpp>
 #include <types.h>
 
 ///

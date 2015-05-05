@@ -2,7 +2,7 @@
 
 using namespace std;
 
-/// \todo Use cache for this.
+/// \todo Original uses cache to retrieve description if id is given. Do we really need this?
 string MinimalItemInfo::description() const {
     if (!m_description.empty()) {
         return m_description;

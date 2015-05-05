@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.11)
 project(atm-util)
 
 file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
-file(GLOB INCLUDES ${PROJECT_SOURCE_DIR}/include/*.h)
+file(GLOB INCLUDES ${PROJECT_SOURCE_DIR}/include/*.h*)
 list(APPEND SOURCES ${INCLUDES})
 
 include_directories(${PROJECT_SOURCE_DIR}/include)

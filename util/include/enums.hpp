@@ -9,3 +9,4 @@ enum class ItemTypes { PREFIX, STEM, SUFFIX };
 /// \brief The Rules enum defines different rule classes for matching different solutions.
 ///
 enum class Rules { AA, AB, AC, BC, CC };
+

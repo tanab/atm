@@ -167,5 +167,24 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
 }
 
 int Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, Node *current) {
-    return -1;
+    if (size <= 0) {
+        return 0;
+    }
+
+    uint64_t category_id2;
+    uint64_t resulting_category_id;
+
+    // TODO: Are sure that we treat STEM and SUFFIX the same way?
+    auto compatibility_rules = m_cache->findCompatibilityRules(
+        (type == ItemTypes::PREFIX ? Rules::AA : Rules::CC), category_id);
+    for (auto &it = compatibility_rules.first; it != compatibility_rules.second; it++) {
+        category_id2 = it->second.category_id_2;
+        resulting_category_id = it->second.resulting_category;
+        auto inflections = it->second.inflections;
+        bool acceptsState = m_cache->acceptsState(type, resulting_category_id);
+        if (acceptsState || m_cache->hasCompatibleAffixes(type, resulting_category_id)) {
+
+        }
+
+    }
 }

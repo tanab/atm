@@ -3,7 +3,7 @@
 #include <vector>
 #include <multiplyparams.h>
 #include <minimaliteminfo.h>
-#include <enums.h>
+#include <enums.hpp>
 
 class Stemmer {
   private:

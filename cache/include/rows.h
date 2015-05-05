@@ -5,7 +5,33 @@
 #include <vector>
 
 #include <conversions.h>
-#include <enums.h>
+#include <enums.hpp>
+
+///
+/// \brief The CategoryRow struct represents a row of the category table.
+///
+struct CategoryRow {
+    CategoryRow() : id(0), name(), type(ItemTypes::PREFIX), sources(), abstract(false) {}
+    CategoryRow(uint64_t anId, const std::wstring& aName, const ItemTypes& aType,
+                const std::string& theSources, bool anAbstract)
+        : id(anId),
+          name(aName),
+          type(aType),
+          sources(atm::conversions::to_bool_vector(theSources)),
+          abstract(anAbstract) {}
+    CategoryRow(const CategoryRow& other)
+        : id(other.id),
+          name(other.name),
+          type(other.type),
+          sources(other.sources),
+          abstract(other.abstract) {}
+
+    uint64_t id;
+    std::wstring name;
+    ItemTypes type;
+    std::vector<bool> sources;
+    bool abstract;
+};
 
 ///
 /// \brief The AffixRow struct represents common columns of rows for prefix, stem and suffix tables.
@@ -21,7 +47,7 @@ struct AffixRow {
 };
 
 ///
-/// \brief The PrefixRow struct represents row of the prefix table.
+/// \brief The PrefixRow struct represents a row of the prefix table.
 ///
 struct PrefixRow : public AffixRow {
     PrefixRow() : AffixRow() {}
@@ -31,7 +57,7 @@ struct PrefixRow : public AffixRow {
 };
 
 ///
-/// \brief The SuffixRow struct represents row of the suffix table.
+/// \brief The SuffixRow struct represents a row of the suffix table.
 ///
 struct SuffixRow : public AffixRow {
     SuffixRow() : AffixRow() {}
@@ -83,7 +109,7 @@ struct AffixCategoryRow {
 };
 
 ///
-/// \brief The PrefixCategoryRow struct represents row of the prefix_category table.
+/// \brief The PrefixCategoryRow struct represents a row of the prefix_category table.
 ///
 struct PrefixCategoryRow : public AffixCategoryRow {
     PrefixCategoryRow() : AffixCategoryRow(), prefix_id(0) {}
@@ -101,7 +127,7 @@ struct PrefixCategoryRow : public AffixCategoryRow {
 };
 
 ///
-/// \brief The SuffixCategoryRow struct represents row of the suffix_category table.
+/// \brief The SuffixCategoryRow struct represents a row of the suffix_category table.
 ///
 struct SuffixCategoryRow : public AffixCategoryRow {
     SuffixCategoryRow() : AffixCategoryRow(), suffix_id(0) {}
@@ -119,7 +145,7 @@ struct SuffixCategoryRow : public AffixCategoryRow {
 };
 
 ///
-/// \brief The CompatibilityRulesRow struct represents row of the compatibility_rules table.
+/// \brief The CompatibilityRulesRow struct represents a row of the compatibility_rules table.
 ///
 struct CompatibilityRulesRow {
     CompatibilityRulesRow()

@@ -24,16 +24,29 @@ class MySqlCache : public AtmCache {
 
     virtual const std::shared_ptr<PrefixRows> prefixTable() const override;
     virtual const std::shared_ptr<SuffixRows> suffixTable() const override;
+    virtual const std::shared_ptr<CategoryRows> categoriesTable() const override;
+
+    /// \todo Document the purpose of this method.
+    virtual bool acceptsState(const ItemTypes &type, uint64_t category_id) const override;
+
+    /// \todo Document the purpose of this method.
+    virtual bool hasCompatibleAffixes(const ItemTypes &type, uint64_t category_id) const override;
 
     virtual const PrefixCategoryMapRange findPrefixCategories(uint64_t prefix_id) const override;
+
+    virtual const SuffixCategoryMapRange findSuffixCategories(uint64_t suffix_id) const override;
+
+    virtual CompatibilityRulesMapRange findCompatibilityRules(const Rules &rule,
+                                                              uint64_t category_id,
+                                                              bool first = true) const override;
 
   private:
     sql::Driver *m_driver;
     std::unique_ptr<sql::Connection> m_connection;
 
-    std::shared_ptr<PrefixRows> m_prefix_rows;  //!< The content of the prefix table.
-    std::shared_ptr<SuffixRows> m_suffix_rows;  //!< The content of the suffix table.
-
+    std::shared_ptr<PrefixRows> m_prefix_rows;      //!< The content of the \code prefix table.
+    std::shared_ptr<SuffixRows> m_suffix_rows;      //!< The content of the \code suffix table.
+    std::shared_ptr<CategoryRows> m_category_rows;  //!< The content of the \code category table.
     ///
     /// \brief m_prefix_category_rows The content of the prefix_category table. The key is
     /// prefix_id.
@@ -54,10 +67,4 @@ class MySqlCache : public AtmCache {
     /// pair category_id2 and type.
     ///
     std::shared_ptr<CompatibilityRulesMap> m_compatibility_rules_rows_2;
-
-    /// \todo Document the purpose of this method.
-    virtual bool acceptsState(const ItemTypes &type, uint64_t category_id) const override;
-
-    /// \todo Document the purpose of this method.
-    virtual bool hasCompatibleAffixes(const ItemTypes &type, uint64_t category_id) const override;
 };
