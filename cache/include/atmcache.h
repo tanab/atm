@@ -11,13 +11,14 @@
 #include <rows.h>
 
 using CategoryRows = std::vector<CategoryRow>;
-using PrefixRows = std::list<PrefixRow>;
-using SuffixRows = std::list<SuffixRow>;
+using PrefixRows = std::list<AffixRow>;
+using SuffixRows = std::list<AffixRow>;
+using StemRows = std::list<AffixRow>;
 
-using PrefixCategoryMap = std::multimap<uint64_t, PrefixCategoryRow>;
+using PrefixCategoryMap = std::multimap<uint64_t, AffixCategoryRow>;
 using PrefixCategoryMapRange = std::pair<PrefixCategoryMap::iterator, PrefixCategoryMap::iterator>;
 
-using SuffixCategoryMap = std::multimap<uint64_t, SuffixCategoryRow>;
+using SuffixCategoryMap = std::multimap<uint64_t, AffixCategoryRow>;
 using SuffixCategoryMapRange = std::pair<SuffixCategoryMap::iterator, SuffixCategoryMap::iterator>;
 
 using CompatibilityRulesKey = std::pair<uint64_t, Rules>;

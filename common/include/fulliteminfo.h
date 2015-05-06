@@ -6,6 +6,14 @@ class FullItemInfo : public MinimalItemInfo {
   public:
     FullItemInfo() : MinimalItemInfo(), m_sources(MAX_SOURCES) {}
 
+    ///
+    /// \brief updateFrom Updates this instance with values from given \ref AffixCategoryRow
+    /// \param row The row to take data from.
+    ///
+    void updateFrom(const AffixCategoryRow &row) {
+        MinimalItemInfo::updateFrom(row);
+    }
+
     inline uint64_t itemId() const { return m_item_id; }
 
     inline void setItemId(uint64_t item_id) { m_item_id = item_id; }

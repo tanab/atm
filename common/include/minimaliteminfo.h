@@ -20,28 +20,15 @@ class MinimalItemInfo {
     MinimalItemInfo() : m_description_id(0), m_category_id(0), m_abstract_categories(MAX_SOURCES) {}
 
     ///
-    /// \brief updateFrom Updates this instance with values from given \ref PrefixCategoryRow
+    /// \brief updateFrom Updates this instance with values from given \ref AffixCategoryRow
     /// \param row The row to take data from.
     ///
-    void updateFrom(const PrefixCategoryRow &row) {
+    void updateFrom(const AffixCategoryRow &row) {
+        m_type = row.affix_type;
         m_category_id = row.category_id;
         m_raw_data = row.raw_data;
         m_part_of_speech = row.part_of_speech;
         m_description_id = row.description_id;
-        m_type = ItemTypes::PREFIX;
-        m_abstract_categories.clear();
-    }
-
-    ///
-    /// \brief updateFrom Updates this instance with values from given \ref PrefixCategoryRow
-    /// \param row The row to take data from.
-    ///
-    void updateFrom(const SuffixCategoryRow &row) {
-        m_category_id = row.category_id;
-        m_raw_data = row.raw_data;
-        m_part_of_speech = row.part_of_speech;
-        m_description_id = row.description_id;
-        m_type = ItemTypes::SUFFIX;
         m_abstract_categories.clear();
     }
 

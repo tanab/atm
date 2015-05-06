@@ -32,11 +32,23 @@ bool MySqlCache::initCache() {
         unique_ptr<sql::PreparedStatement> statement(
             m_connection->prepareStatement("SELECT id, name FROM prefix ORDER BY id ASC"));
         unique_ptr<sql::ResultSet> resultSet(statement->executeQuery());
-        m_prefix_rows = make_shared<list<PrefixRow> >();
+        m_prefix_rows = make_shared<list<AffixRow>>();
         while (resultSet->next()) {
             m_prefix_rows->emplace_back(
-                resultSet->getUInt64(1),
+                ItemTypes::PREFIX, resultSet->getUInt64(1),
                 to_utf<wchar_t>(resultSet->getString(2).asStdString(), "Latin1"));
+        }
+
+        // Load stem table
+        statement.reset(m_connection->prepareStatement(
+            "SELECT id, name, grammar_stem_id, sources FROM stem ORDER BY id ASC"));
+        resultSet.reset(statement->executeQuery());
+        m_stem_rows = make_shared<list<AffixRow>>();
+        while (resultSet->next()) {
+            m_stem_rows->emplace_back(
+                ItemTypes::STEM, resultSet->getUInt64(1),
+                to_utf<wchar_t>(resultSet->getString(2).asStdString(), "Latin1"),
+                resultSet->getUInt64(3), resultSet->getString(4).asStdString());
         }
 
         // Load suffix table
@@ -44,10 +56,10 @@ bool MySqlCache::initCache() {
             m_connection->prepareStatement("SELECT id, name FROM suffix ORDER BY id ASC"));
         resultSet.reset(statement->executeQuery());
 
-        m_suffix_rows = make_shared<list<SuffixRow> >();
+        m_suffix_rows = make_shared<list<AffixRow>>();
         while (resultSet->next()) {
             m_suffix_rows->emplace_back(
-                resultSet->getUInt64(1),
+                ItemTypes::SUFFIX, resultSet->getUInt64(1),
                 to_utf<wchar_t>(resultSet->getString(2).asStdString(), "Latin1"));
         }
 
@@ -59,13 +71,13 @@ bool MySqlCache::initCache() {
         m_prefix_category_rows = make_shared<PrefixCategoryMap>();
         while (resultSet->next()) {
             uint64_t key = resultSet->getUInt64(1);
-            m_prefix_category_rows->insert(pair<uint64_t, PrefixCategoryRow>(
-                key,
-                PrefixCategoryRow(key, resultSet->getUInt64(2), resultSet->getString(3),
-                                  to_utf<wchar_t>(resultSet->getString(4).asStdString(), "Latin1"),
-                                  to_utf<wchar_t>(resultSet->getString(5).asStdString(), "Latin1"),
-                                  to_utf<wchar_t>(resultSet->getString(6).asStdString(), "Latin1"),
-                                  resultSet->getUInt64(7), resultSet->getBoolean(8))));
+            m_prefix_category_rows->insert(pair<uint64_t, AffixCategoryRow>(
+                key, AffixCategoryRow(
+                         ItemTypes::PREFIX, key, resultSet->getUInt64(2), resultSet->getString(3),
+                         to_utf<wchar_t>(resultSet->getString(4).asStdString(), "Latin1"),
+                         to_utf<wchar_t>(resultSet->getString(5).asStdString(), "Latin1"),
+                         to_utf<wchar_t>(resultSet->getString(6).asStdString(), "Latin1"),
+                         resultSet->getUInt64(7), resultSet->getBoolean(8))));
         }
 
         // Load suffix category table
@@ -76,18 +88,19 @@ bool MySqlCache::initCache() {
         m_suffix_category_rows = make_shared<SuffixCategoryMap>();
         while (resultSet->next()) {
             uint64_t key = resultSet->getUInt64(1);
-            m_suffix_category_rows->insert(pair<uint64_t, SuffixCategoryRow>(
-                key,
-                SuffixCategoryRow(key, resultSet->getUInt64(2), resultSet->getString(3),
-                                  to_utf<wchar_t>(resultSet->getString(4).asStdString(), "Latin1"),
-                                  to_utf<wchar_t>(resultSet->getString(5).asStdString(), "Latin1"),
-                                  to_utf<wchar_t>(resultSet->getString(6).asStdString(), "Latin1"),
-                                  resultSet->getUInt64(7), resultSet->getBoolean(8))));
+            m_suffix_category_rows->insert(pair<uint64_t, AffixCategoryRow>(
+                key, AffixCategoryRow(
+                         ItemTypes::SUFFIX, key, resultSet->getUInt64(2), resultSet->getString(3),
+                         to_utf<wchar_t>(resultSet->getString(4).asStdString(), "Latin1"),
+                         to_utf<wchar_t>(resultSet->getString(5).asStdString(), "Latin1"),
+                         to_utf<wchar_t>(resultSet->getString(6).asStdString(), "Latin1"),
+                         resultSet->getUInt64(7), resultSet->getBoolean(8))));
         }
 
         // Load compatibility rules
         statement.reset(m_connection->prepareStatement(
-            "SELECT category_id1, category_id2, type, sources, resulting_category, inflections FROM "
+            "SELECT category_id1, category_id2, type, sources, resulting_category, inflections "
+            "FROM "
             "compatibility_rules ORDER BY type, category_id1, category_id2 ASC"));
         resultSet.reset(statement->executeQuery());
         m_compatibility_rules_rows_1 = make_shared<CompatibilityRulesMap>();

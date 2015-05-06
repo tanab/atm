@@ -37,33 +37,32 @@ struct CategoryRow {
 /// \brief The AffixRow struct represents common columns of rows for prefix, stem and suffix tables.
 ///
 struct AffixRow {
-    AffixRow() : id(0), name() {}
-    AffixRow(uint64_t anId, const std::wstring& aName) : id(anId), name(aName) {}
-    AffixRow(const AffixRow& other) : id(other.id), name(other.name) {}
-    AffixRow(AffixRow&& other) : id(std::move(other.id)), name(std::move(other.name)) {}
+    AffixRow() : affix_type(ItemTypes::PREFIX), id(0), name(), grammar_stem_id(0), sources() {}
+    AffixRow(const ItemTypes& anAffixType, uint64_t anId, const std::wstring& aName,
+             uint64_t aGrammarStemId = 0, const std::string& theSources = "")
+        : affix_type(anAffixType),
+          id(anId),
+          name(aName),
+          grammar_stem_id(aGrammarStemId),
+          sources(atm::conversions::to_bool_vector(theSources)) {}
+    AffixRow(const AffixRow& other)
+        : affix_type(other.affix_type),
+          id(other.id),
+          name(other.name),
+          grammar_stem_id(other.grammar_stem_id),
+          sources(other.sources) {}
+    AffixRow(AffixRow&& other)
+        : affix_type(std::move(other.affix_type)),
+          id(std::move(other.id)),
+          name(std::move(other.name)),
+          grammar_stem_id(std::move(other.grammar_stem_id)),
+          sources(std::move(other.sources)) {}
 
+    ItemTypes affix_type;
     uint64_t id;
     std::wstring name;
-};
-
-///
-/// \brief The PrefixRow struct represents a row of the prefix table.
-///
-struct PrefixRow : public AffixRow {
-    PrefixRow() : AffixRow() {}
-    PrefixRow(uint64_t anId, const std::wstring& aName) : AffixRow(anId, aName) {}
-    PrefixRow(const PrefixRow& other) : AffixRow(other) {}
-    PrefixRow(PrefixRow&& other) : AffixRow(other) {}
-};
-
-///
-/// \brief The SuffixRow struct represents a row of the suffix table.
-///
-struct SuffixRow : public AffixRow {
-    SuffixRow() : AffixRow() {}
-    SuffixRow(uint64_t anId, const std::wstring& aName) : AffixRow(anId, aName) {}
-    SuffixRow(const SuffixRow& other) : AffixRow(other) {}
-    SuffixRow(SuffixRow&& other) : AffixRow(other) {}
+    uint64_t grammar_stem_id;   //!< Used only for stems.
+    std::vector<bool> sources;  //!< Used only for stems.
 };
 
 ///
@@ -72,18 +71,22 @@ struct SuffixRow : public AffixRow {
 ///
 struct AffixCategoryRow {
     AffixCategoryRow()
-        : category_id(0),
+        : affix_type(ItemTypes::PREFIX),
+          affix_id(0),
+          category_id(0),
           abstract_categories(),
           sources(),
           raw_data(),
           part_of_speech(),
           description_id(0),
           reverse_description(false) {}
-    AffixCategoryRow(uint64_t aCategoryId, const std::string& theAbstractCategories,
-                     const std::wstring& theSources, const std::wstring& theRawData,
-                     const std::wstring& aPartOfSpeech, uint64_t aDescriptionId,
-                     bool aReverseDescription)
-        : category_id(aCategoryId),
+    AffixCategoryRow(const ItemTypes& anAffixType, uint64_t anAffixId, uint64_t aCategoryId,
+                     const std::string& theAbstractCategories, const std::wstring& theSources,
+                     const std::wstring& theRawData, const std::wstring& aPartOfSpeech,
+                     uint64_t aDescriptionId, bool aReverseDescription)
+        : affix_type(anAffixType),
+          affix_id(anAffixId),
+          category_id(aCategoryId),
           abstract_categories(atm::conversions::to_bool_vector(theAbstractCategories)),
           sources(theSources),
           raw_data(theRawData),
@@ -91,7 +94,9 @@ struct AffixCategoryRow {
           description_id(aDescriptionId),
           reverse_description(aReverseDescription) {}
     AffixCategoryRow(const AffixCategoryRow& other)
-        : category_id(other.category_id),
+        : affix_type(other.affix_type),
+          affix_id(other.affix_id),
+          category_id(other.category_id),
           abstract_categories(other.abstract_categories),
           sources(other.sources),
           raw_data(other.raw_data),
@@ -99,6 +104,8 @@ struct AffixCategoryRow {
           description_id(other.description_id),
           reverse_description(other.reverse_description) {}
 
+    ItemTypes affix_type;
+    uint64_t affix_id;
     uint64_t category_id;
     std::vector<bool> abstract_categories;
     std::wstring sources;
@@ -106,42 +113,6 @@ struct AffixCategoryRow {
     std::wstring part_of_speech;
     uint64_t description_id;
     bool reverse_description;
-};
-
-///
-/// \brief The PrefixCategoryRow struct represents a row of the prefix_category table.
-///
-struct PrefixCategoryRow : public AffixCategoryRow {
-    PrefixCategoryRow() : AffixCategoryRow(), prefix_id(0) {}
-    PrefixCategoryRow(uint64_t aPrefixId, uint64_t aCategoryId,
-                      const std::string& theAbstractCategories, const std::wstring& theSources,
-                      const std::wstring& theRawData, const std::wstring& aPartOfSpeech,
-                      uint64_t aDescriptionId, bool aReverseDescription)
-        : AffixCategoryRow(aCategoryId, theAbstractCategories, theSources, theRawData,
-                           aPartOfSpeech, aDescriptionId, aReverseDescription),
-          prefix_id(aPrefixId) {}
-    PrefixCategoryRow(const PrefixCategoryRow& other)
-        : AffixCategoryRow(other), prefix_id(other.prefix_id) {}
-
-    uint64_t prefix_id;
-};
-
-///
-/// \brief The SuffixCategoryRow struct represents a row of the suffix_category table.
-///
-struct SuffixCategoryRow : public AffixCategoryRow {
-    SuffixCategoryRow() : AffixCategoryRow(), suffix_id(0) {}
-    SuffixCategoryRow(uint64_t aSuffixId, uint64_t aCategoryId,
-                      const std::string& theAbstractCategories, const std::wstring& theSources,
-                      const std::wstring& theRawData, const std::wstring& aPartOfSpeech,
-                      uint64_t aDescriptionId, bool aReverseDescription)
-        : AffixCategoryRow(aCategoryId, theAbstractCategories, theSources, theRawData,
-                           aPartOfSpeech, aDescriptionId, aReverseDescription),
-          suffix_id(aSuffixId) {}
-    SuffixCategoryRow(const SuffixCategoryRow& other)
-        : AffixCategoryRow(other), suffix_id(other.suffix_id) {}
-
-    uint64_t suffix_id;
 };
 
 ///

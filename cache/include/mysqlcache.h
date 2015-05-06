@@ -45,6 +45,7 @@ class MySqlCache : public AtmCache {
     std::unique_ptr<sql::Connection> m_connection;
 
     std::shared_ptr<PrefixRows> m_prefix_rows;      //!< The content of the \code prefix table.
+    std::shared_ptr<StemRows> m_stem_rows;          //!< The content of the \code stem table.
     std::shared_ptr<SuffixRows> m_suffix_rows;      //!< The content of the \code suffix table.
     std::shared_ptr<CategoryRows> m_category_rows;  //!< The content of the \code category table.
     ///
