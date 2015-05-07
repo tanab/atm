@@ -1,6 +1,5 @@
 #pragma once
 
-#include <codecvt>
 #include <list>
 #include <locale>
 #include <map>

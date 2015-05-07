@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <string>
 #include <vector>
 
 const int LETTER_CHILDREN_SIZE = 37;

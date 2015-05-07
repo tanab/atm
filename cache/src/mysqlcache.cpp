@@ -1,6 +1,7 @@
 #include <mysqlcache.h>
 
 #include <atomic>
+#include <mutex>
 #include <boost/locale.hpp>
 
 #include <cppconn/driver.h>
@@ -178,7 +179,6 @@ bool MySqlCache::hasCompatibleAffixes(const ItemTypes &type, uint64_t category_i
     return m_compatibility_rules_rows_1->find(CompatibilityRulesKey(
                category_id, type == ItemTypes::PREFIX ? Rules::AA : Rules::CC)) !=
            m_compatibility_rules_rows_1->end();
-    return true;
 }
 
 CompatibilityRulesMapRange MySqlCache::findCompatibilityRules(const Rules &rule,

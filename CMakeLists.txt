@@ -7,7 +7,7 @@ include(common)
 include(testing)
 
 find_package(MYSQLCPPCONN REQUIRED)
-find_package(Boost 1.55.0 COMPONENTS system locale REQUIRED)
+find_package(Boost 1.54.0 COMPONENTS system locale regex REQUIRED)
 
 add_subdirectory(util)
 add_subdirectory(cache)

@@ -1,9 +1,11 @@
 #pragma once
 
-#include <string>
-#include <regex>
-#include <letters.h>
+
 #include <iostream>
+#include <letters.h>
+#include <string>
+
+#include <boost/regex.hpp>
 
 const std::wstring regex_remove_diacritics = std::wstring()
                                                  .append(L"[")
@@ -23,6 +25,6 @@ const std::wstring regex_remove_diacritics = std::wstring()
 /// \return string without diacritics.
 ///
 inline std::wstring removeDiacritics(const std::wstring &s) {
-    std::wregex diacritics(regex_remove_diacritics);
-    return std::regex_replace(s, diacritics, L"", std::regex_constants::format_default);
+    boost::wregex diacritics(regex_remove_diacritics);
+    return boost::regex_replace(s, diacritics, L"", boost::regex_constants::format_default);
 }
