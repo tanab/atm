@@ -4,6 +4,7 @@
 #include <constants.h>
 #include <atmcache.h>
 #include <diacritics.h>
+#include <fulliteminfo.h>
 
 using namespace std;
 
@@ -95,24 +96,13 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
     wchar_t current_letter;
     wstring::size_type i = 0;
 
-    // Original code with goto. Ugly and nasty...
-    //    if (letters.size() == 0) {
-    //        current_letter = L'\0';
-    //        if (current_node == m_base) {
-    //            // BAD BAD BAD UGLY UGLY UGLY
-    //            goto result;
-    //        }
-    //    } else {
-    //        current_letter = letters[0];
-    //    }
-
+    // The original implementation used ugly coditions with goto.
     if (letters.size() != 0) {
         current_letter = letters[0];
     } else {
         current_letter = L'\0';
     }
 
-    // This condition replaces original ugly coditions with goto.
     if (letters.size() != 0 && current_node != m_base) {
         do {
             matching_letter_node =
@@ -143,8 +133,6 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
         }
     }
 
-    // See the comment above the original code with goto.
-    // result:
     for (const auto tmp : current_node->resultChildren()) {
         ResultNode *old_result = static_cast<ResultNode *>(tmp);
         if (old_result->previousCategoryId() == category_id &&
@@ -183,8 +171,14 @@ int Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, Nod
         auto inflections = it->second.inflections;
         bool acceptsState = m_cache->acceptsState(type, resulting_category_id);
         if (acceptsState || m_cache->hasCompatibleAffixes(type, resulting_category_id)) {
-
+            FullItemInfo info;
+            auto affix_categories = m_cache->findAffixCategories(category_id2);
+            for (auto &it = affix_categories.first; it != affix_categories.second; it++) {
+                info.updateFrom(it->second);
+                auto name = m_cache->findAffixName(info.type(), info.itemId());
+                name = removeDiacritics(name);
+                std::wstring inflected_raw_data = info.rawData();
+            }
         }
-
     }
 }

@@ -12,6 +12,9 @@ class FullItemInfo : public MinimalItemInfo {
     ///
     void updateFrom(const AffixCategoryRow &row) {
         MinimalItemInfo::updateFrom(row);
+        m_item_id = row.affix_id;
+        m_sources = row.sources;
+        m_lemma_id = row.lemma_id;
     }
 
     inline uint64_t itemId() const { return m_item_id; }

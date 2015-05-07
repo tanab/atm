@@ -79,19 +79,21 @@ struct AffixCategoryRow {
           raw_data(),
           part_of_speech(),
           description_id(0),
+          lemma_id(),
           reverse_description(false) {}
     AffixCategoryRow(const ItemTypes& anAffixType, uint64_t anAffixId, uint64_t aCategoryId,
-                     const std::string& theAbstractCategories, const std::wstring& theSources,
+                     const std::string& theAbstractCategories, const std::string& theSources,
                      const std::wstring& theRawData, const std::wstring& aPartOfSpeech,
-                     uint64_t aDescriptionId, bool aReverseDescription)
+                     uint64_t aDescriptionId, const std::wstring& aLemmaId, bool aReverseDescription)
         : affix_type(anAffixType),
           affix_id(anAffixId),
           category_id(aCategoryId),
           abstract_categories(atm::conversions::to_bool_vector(theAbstractCategories)),
-          sources(theSources),
+          sources(atm::conversions::to_bool_vector(theSources)),
           raw_data(theRawData),
           part_of_speech(aPartOfSpeech),
           description_id(aDescriptionId),
+          lemma_id(aLemmaId),
           reverse_description(aReverseDescription) {}
     AffixCategoryRow(const AffixCategoryRow& other)
         : affix_type(other.affix_type),
@@ -102,17 +104,19 @@ struct AffixCategoryRow {
           raw_data(other.raw_data),
           part_of_speech(other.part_of_speech),
           description_id(other.description_id),
+          lemma_id(other.lemma_id),
           reverse_description(other.reverse_description) {}
 
     ItemTypes affix_type;
     uint64_t affix_id;
     uint64_t category_id;
     std::vector<bool> abstract_categories;
-    std::wstring sources;
+    std::vector<bool> sources;
     std::wstring raw_data;
     std::wstring part_of_speech;
     uint64_t description_id;
-    bool reverse_description;
+    std::wstring lemma_id;     //!< Used only for stem
+    bool reverse_description;  //!< Used only for prefix and suffix
 };
 
 ///
