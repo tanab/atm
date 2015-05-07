@@ -1,9 +1,9 @@
 #include <gmock/gmock.h>
-#include <conversions.h>
+#include <util.h>
 #include <string>
 
 using namespace std;
-using namespace atm::conversions;
+using namespace atm::util;
 
 TEST(BoolVectorConversions, ConvertsStringToBitVector) {
     auto temp = "ATM";
@@ -15,3 +15,4 @@ TEST(BoolVectorConversions, ConvertsStringToBitVector) {
     }
     ASSERT_EQ("010000010101010001001101", outcome);
 }
+

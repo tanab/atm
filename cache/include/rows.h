@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <conversions.h>
+#include <util.h>
 #include <enums.hpp>
 
 ///
@@ -17,7 +17,7 @@ struct CategoryRow {
         : id(anId),
           name(aName),
           type(aType),
-          sources(atm::conversions::to_bool_vector(theSources)),
+          sources(atm::util::to_bool_vector(theSources)),
           abstract(anAbstract) {}
     CategoryRow(const CategoryRow& other)
         : id(other.id),
@@ -44,7 +44,7 @@ struct AffixRow {
           id(anId),
           name(aName),
           grammar_stem_id(aGrammarStemId),
-          sources(atm::conversions::to_bool_vector(theSources)) {}
+          sources(atm::util::to_bool_vector(theSources)) {}
     AffixRow(const AffixRow& other)
         : affix_type(other.affix_type),
           id(other.id),
@@ -88,8 +88,8 @@ struct AffixCategoryRow {
         : affix_type(anAffixType),
           affix_id(anAffixId),
           category_id(aCategoryId),
-          abstract_categories(atm::conversions::to_bool_vector(theAbstractCategories)),
-          sources(atm::conversions::to_bool_vector(theSources)),
+          abstract_categories(atm::util::to_bool_vector(theAbstractCategories)),
+          sources(atm::util::to_bool_vector(theSources)),
           raw_data(theRawData),
           part_of_speech(aPartOfSpeech),
           description_id(aDescriptionId),
@@ -136,7 +136,7 @@ struct CompatibilityRulesRow {
         : category_id_1(aCategoryId1),
           category_id_2(aCategoryId2),
           type(aType),
-          sources(atm::conversions::to_bool_vector(theSources)),
+          sources(atm::util::to_bool_vector(theSources)),
           resulting_category(aResultingCategory),
           inflections(theInflections) {}
     CompatibilityRulesRow(const CompatibilityRulesRow& other)

@@ -6,15 +6,12 @@ file(GLOB INCLUDES ${PROJECT_SOURCE_DIR}/include/*.h*)
 list(APPEND SOURCES ${INCLUDES})
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
-#include_directories(${MYSQLCPPCONN_INCLUDE_DIRS})
-#include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 
-#link_directories(${MYSQLCPPCONN_LIBRARY_DIRS})
-#link_directories(${Boost_LIBRARY_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-#target_link_libraries(${PROJECT_NAME} ${MYSQLCPPCONN_LIBRARIES})
-#target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 # Exporting include dirs, library dirs and libraries
 set(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include

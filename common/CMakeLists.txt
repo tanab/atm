@@ -19,6 +19,7 @@ link_directories(${atm-cache_LIBRARY_DIRS})
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${GTEST_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GMOCK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${atm-cache_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${atm-util_LIBRARIES})
 
