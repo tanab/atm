@@ -1,10 +1,5 @@
 #include <util.h>
-#include <iostream>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/algorithm/string/split.hpp>
-
 using namespace std;
-using namespace boost;
 
 namespace atm {
 namespace util {
@@ -20,18 +15,6 @@ vector<bool> to_bool_vector(const string &data) {
         }
     }
     return ret_val;
-}
-
-vector<wstring> split(const wstring &input, const wstring &delimiter) {
-    vector<wstring> output;
-    boost::split(output, input, is_any_of(delimiter), token_compress_on);
-    return output;
-}
-
-vector<string> split(const string &input, const string &delimiter) {
-    vector<string> output;
-    boost::split(output, input, is_any_of(delimiter), token_compress_on);
-    return output;
 }
 }
 }

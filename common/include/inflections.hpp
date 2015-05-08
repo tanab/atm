@@ -18,7 +18,6 @@ class Inflections {
         if (inflection.empty() || inflection.find_first_not_of(L' ') == std::wstring::npos) {
             return;
         }
-
     }
 
   protected:
