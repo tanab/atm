@@ -27,7 +27,7 @@ class LetterNode : public Node {
     /// \copydoc Node::toString
     virtual std::wstring toString(bool) const override {
         std::wstring retVal = L"--->(";
-        retVal += ((m_letter == 0 ? L'$' : m_letter));
+        retVal += ((m_letter == L'\0' ? L'$' : m_letter));
         retVal.append(L")");
         return retVal;
     }

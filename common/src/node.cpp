@@ -34,19 +34,20 @@ void Node::removeAllChildren() {
         delete node;
         return true;
     });
-    for_each(m_letter_children.begin(), m_letter_children.end(), [](Node *&node) {
-        if (node != nullptr) {
-            node->removeAllChildren();
-            delete node;
-            node = nullptr;
-        }
-    });
+//    for_each(m_letter_children.begin(), m_letter_children.end(), [](Node *&node) {
+//        if (node != nullptr) {
+//            node->removeAllChildren();
+//            delete node;
+//            node = nullptr;
+//        }
+//    });
 }
 
 void Node::addChild(Node *child) {
     if (child->letterNode()) {
-        //TODO: What if node for given letter index already exists?
-        m_letter_children[letterIndex(child->letter())] = child;
+        // TODO: What if node for given letter index already exists?
+        auto index = letterIndex(child->letter());
+        m_letter_children[index] = child;
     } else {
         m_result_children.push_back(child);
     }

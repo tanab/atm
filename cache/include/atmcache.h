@@ -9,14 +9,17 @@
 #include <enums.hpp>
 #include <rows.h>
 
-using CategoryRows = std::vector<CategoryRow>;
-using AffixRows = std::vector<AffixRow>;
+namespace atm {
+namespace cache {
 
-using AffixCategoryMap = std::multimap<uint64_t, AffixCategoryRow>;
+using CategoryRows = std::vector<const CategoryRow>;
+using AffixRows = std::vector<const AffixRow>;
+
+using AffixCategoryMap = std::multimap<uint64_t, const AffixCategoryRow>;
 using AffixCategoryMapRange = std::pair<AffixCategoryMap::iterator, AffixCategoryMap::iterator>;
 
 using CompatibilityRulesKey = std::pair<uint64_t, Rules>;
-using CompatibilityRulesMap = std::multimap<CompatibilityRulesKey, CompatibilityRulesRow>;
+using CompatibilityRulesMap = std::multimap<CompatibilityRulesKey, const CompatibilityRulesRow>;
 using CompatibilityRulesMapRange =
     std::pair<CompatibilityRulesMap::iterator, CompatibilityRulesMap::iterator>;
 
@@ -72,15 +75,21 @@ class AtmCache {
 
     ///
     /// \brief prefixTable returns all rows from the prefix table.
-    /// \return list of rows in prefix table.
+    /// \return vector of rows in the prefix table.
     ///
     virtual const std::shared_ptr<AffixRows> prefixTable() const = 0;
 
     ///
     /// \brief suffixTable returns all rows from the suffix table.
-    /// \return list of rows in suffix table.
+    /// \return vector of rows in the suffix table.
     ///
     virtual const std::shared_ptr<AffixRows> suffixTable() const = 0;
+
+    ///
+    /// \brief stemTable returns all rows from the stem table.
+    /// \return vector of rows in the stem table.
+    ///
+    virtual const std::shared_ptr<AffixRows> stemTable() const = 0;
 
     ///
     /// \brief categoriesTable returns all rows from the category table.
@@ -200,3 +209,5 @@ class AtmCache {
     ///
     std::shared_ptr<CompatibilityRulesMap> m_compatibility_rules_rows_2;
 };
+}
+}

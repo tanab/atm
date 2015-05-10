@@ -3,12 +3,18 @@
 #include <resultnode.h>
 #include <constants.h>
 #include <atmcache.h>
-#include <diacritics.h>
+#include <inflections.hpp>
+#include <diacritics.hpp>
 #include <fulliteminfo.h>
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
-Tree::Tree(AtmCache *cache)
+namespace atm {
+namespace common {
+
+Tree::Tree(cache::AtmCache *cache)
     : m_cache(cache),
       m_affix(false),
       m_last_id(-1),
@@ -42,9 +48,6 @@ void Tree::reset() {
 }
 
 bool Tree::buildAffixTree(const ItemTypes &type) {
-    if (type != ItemTypes::PREFIX || type != ItemTypes::SUFFIX) {
-        return false;
-    }
     reset();
     m_affix = true;
     m_type = type;
@@ -52,37 +55,35 @@ bool Tree::buildAffixTree(const ItemTypes &type) {
     m_id_map.clear();
     switch (m_type) {
         case ItemTypes::PREFIX:
-            return buildAffixTreeFromPrefix();
+            return buildAffixTreeHelper(m_cache->prefixTable());
         case ItemTypes::SUFFIX:
-            return buildAffixTreeFromSuffix();
+            return buildAffixTreeHelper(m_cache->suffixTable());
         default:
-            return false;
+            return buildAffixTreeHelper(m_cache->stemTable());
     }
 }
 
-bool Tree::buildAffixTreeFromPrefix() {
-    auto rows = m_cache->prefixTable();
+bool Tree::buildAffixTreeHelper(const std::shared_ptr<cache::AffixRows> rows) {
     wstring name;
     for (const auto &row : *rows) {
         name = removeDiacritics(row.name);
         auto affix_id = row.id;
-        auto prefix_categories = m_cache->findPrefixCategories(row.id);
-        MinimalItemInfo info;
-        for (auto &it = prefix_categories.first; it != prefix_categories.second; it++) {
-            info.updateFrom(it->second);
-            bool acceptsState = m_cache->acceptsState(info.type(), info.categoryId());
-            if (acceptsState || m_cache->hasCompatibleAffixes(info.type(), info.categoryId())) {
-                Node *next = addElement(name, affix_id, info.categoryId(), info.categoryId(),
-                                        acceptsState, info.rawData(), info.rawData(), L"", m_base);
+        cache::AffixCategoryMapRange prefix_categories = m_cache->findPrefixCategories(affix_id);
+        for (auto it = prefix_categories.first; it != prefix_categories.second; it++) {
+            bool acceptsState =
+                m_cache->acceptsState(it->second.affix_type, it->second.category_id);
+            if (acceptsState ||
+                m_cache->hasCompatibleAffixes(it->second.affix_type, it->second.category_id)) {
+                Node *next =
+                    addElement(name, affix_id, it->second.category_id, it->second.category_id,
+                               acceptsState, it->second.raw_data, it->second.raw_data, L"", m_base);
                 // TODO: Clarify why 6 - name.length()
-                buildHelper(m_type, info.categoryId(), 6 - name.length(), next);
+                buildHelper(m_type, it->second.category_id, 6 - name.length(), next);
             }
         }
     }
     return true;
 }
-
-bool Tree::buildAffixTreeFromSuffix() { return true; }
 
 Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t category_id,
                        uint64_t resulting_category_id, bool accepts_state, const wstring &raw_data,
@@ -96,43 +97,88 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
     wchar_t current_letter;
     wstring::size_type i = 0;
 
-    // The original implementation used ugly coditions with goto.
-    if (letters.size() != 0) {
-        current_letter = letters[0];
-    } else {
+    if (letters.size() == 0) {
         current_letter = L'\0';
+        if (current_node == m_base) {
+            goto result;
+        }
+    } else {
+        current_letter = letters[0];
     }
 
-    if (letters.size() != 0 && current_node != m_base) {
-        do {
-            matching_letter_node =
-                dynamic_cast<LetterNode *>(current_node->letterChild(current_letter));
-            if (matching_letter_node != nullptr) {
-                current_node = matching_letter_node;
-                current_letter = letters[++i];
-            } else {
-                break;
-            }
-        } while (i < letters.size());
-
-        if (letters.size() == 0 && i == 0) {
-            // Add a null letter
-            // TODO: Why do we add null letter?
-            auto new_node = new LetterNode(L'\0');
-            current_node->addChild(new_node);
-            current_node = new_node;
-            m_letter_nodes++;
+    do {
+        matching_letter_node =
+            dynamic_cast<LetterNode *>(current_node->letterChild(current_letter));
+        if (matching_letter_node != nullptr) {
+            current_node = matching_letter_node;
+            current_letter = letters[++i];
+        } else {
+            break;
         }
+    } while (i < letters.size());
 
-        while (i < letters.size()) {
-            // Add necessary letters
-            auto new_node = new LetterNode(letters[i]);
-            current_node->addChild(new_node);
-            current_node = new_node;
-            m_letter_nodes++;
-        }
+    if (letters.size() == 0 && i == 0) {
+        // Add a null letter
+        // TODO: Why do we add null letter?
+        auto new_node = new LetterNode(L'\0');
+        current_node->addChild(new_node);
+        current_node = new_node;
+        m_letter_nodes++;
     }
 
+    while (i < letters.size()) {
+        // Add necessary letters
+        //            std::wcout << L"LETTERS: " << letters << L" " << (unsigned int)letters[i]
+        //            << std::endl;
+        auto new_node = new LetterNode(letters[i]);
+        current_node->addChild(new_node);
+        current_node = new_node;
+        m_letter_nodes++;
+        i++;
+    }
+
+// The original implementation used ugly coditions with goto.
+//    if (letters.size() != 0) {
+//        current_letter = letters[0];
+//    } else {
+//        current_letter = L'\0';
+//    }
+
+//    if (letters.size() != 0 && current_node != m_base) {
+//        do {
+//            matching_letter_node =
+//                dynamic_cast<LetterNode *>(current_node->letterChild(current_letter));
+//            if (matching_letter_node != nullptr) {
+//                current_node = matching_letter_node;
+//                current_letter = letters[++i];
+//            } else {
+//                break;
+//            }
+//        } while (i < letters.size());
+
+//        if (letters.size() == 0 && i == 0) {
+//            // Add a null letter
+//            // TODO: Why do we add null letter?
+//            auto new_node = new LetterNode(L'\0');
+//            current_node->addChild(new_node);
+//            current_node = new_node;
+//            m_letter_nodes++;
+//        }
+
+//        while (i < letters.size()) {
+//            // Add necessary letters
+//            //            std::wcout << L"LETTERS: " << letters << L" " << (unsigned
+//            int)letters[i]
+//            //            << std::endl;
+//            auto new_node = new LetterNode(letters[i]);
+//            current_node->addChild(new_node);
+//            current_node = new_node;
+//            m_letter_nodes++;
+//            i++;
+//        }
+//    }
+
+result:
     for (const auto tmp : current_node->resultChildren()) {
         ResultNode *old_result = static_cast<ResultNode *>(tmp);
         if (old_result->previousCategoryId() == category_id &&
@@ -148,37 +194,78 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
                                         raw_data, inflected_raw_data, inflection_rule_description);
     // TODO: Check whether commented lines are needed because of the side effects.
     current_node->addChild(result);
-    //    current_node = result;
+                current_node = result;
     m_result_nodes++;
-    //    return current_node;
-    return result;
+                return current_node;
+//    return result;
 }
 
-int Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, Node *current) {
+void Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, Node *current) {
     if (size <= 0) {
-        return 0;
+        return;
     }
 
-    uint64_t category_id2;
-    uint64_t resulting_category_id;
+    uint64_t category_id2 = 0;
+    uint64_t resulting_category_id = 0;
 
     // TODO: Are sure that we treat STEM and SUFFIX the same way?
     auto compatibility_rules = m_cache->findCompatibilityRules(
         (type == ItemTypes::PREFIX ? Rules::AA : Rules::CC), category_id);
-    for (auto &it = compatibility_rules.first; it != compatibility_rules.second; it++) {
-        category_id2 = it->second.category_id_2;
-        resulting_category_id = it->second.resulting_category;
-        auto inflections = it->second.inflections;
+    for (auto it_comp_rules = compatibility_rules.first;
+         it_comp_rules != compatibility_rules.second; it_comp_rules++) {
+        category_id2 = it_comp_rules->second.category_id_2;
+        resulting_category_id = it_comp_rules->second.resulting_category;
+        std::wstring inflections = it_comp_rules->second.inflections;
         bool acceptsState = m_cache->acceptsState(type, resulting_category_id);
         if (acceptsState || m_cache->hasCompatibleAffixes(type, resulting_category_id)) {
-            FullItemInfo info;
             auto affix_categories = m_cache->findAffixCategories(category_id2);
-            for (auto &it = affix_categories.first; it != affix_categories.second; it++) {
-                info.updateFrom(it->second);
-                auto name = m_cache->findAffixName(info.type(), info.itemId());
+            for (auto it_affix_cat = affix_categories.first;
+                 it_affix_cat != affix_categories.second; it_affix_cat++) {
+                std::wstring name = m_cache->findAffixName(it_affix_cat->second.affix_type,
+                                                           it_affix_cat->second.affix_id);
                 name = removeDiacritics(name);
-                std::wstring inflected_raw_data = info.rawData();
+                auto inflected_raw_data = it_affix_cat->second.raw_data;
+                inflections::applyRawDataInflections(inflections, name, inflected_raw_data);
+                Node *next =
+                    addElement(name, it_affix_cat->second.affix_id, category_id2,
+                               resulting_category_id, acceptsState, it_affix_cat->second.raw_data,
+                               inflected_raw_data, inflections, current);
+                buildHelper(type, resulting_category_id, size - name.length(), next);
             }
         }
     }
+}
+
+void Tree::printTreeHelper(Node *current_node, int level, wfstream &fs) {
+//    std::wcout << std::wstring(level * 7, L' ') << current_node->toString(true) << std::endl;
+    fs << std::wstring(level * 7, L' ') << current_node->toString(true) << std::endl;
+    for (auto node : current_node->letterChildren()) {
+        if (node != nullptr) {
+            printTreeHelper(node, level + 1, fs);
+        }
+    }
+    for (auto node : current_node->resultChildren()) {
+        if (node != nullptr) {
+            printTreeHelper(node, level + 1, fs);
+        }
+    }
+}
+
+void Tree::printTree() {
+    std::wcout.imbue(std::locale(""));
+    wfstream fs;
+    fs.imbue(std::locale(""));
+    fs.open("/tmp/prefix_tree.txt", fstream::out);
+    fs << "----------------------------------------" << std::endl;
+    fs << "\t prefix Tree" << std::endl;
+    fs << "----------------------------------------" << std::endl;
+    printTreeHelper(m_base, 0, fs);
+    fs << "----------------------------------------" << std::endl;
+    fs << "letter nodes count = " << m_letter_nodes << std::endl;
+    fs << "result nodes count = " << m_result_nodes << std::endl;
+    fs << "----------------------------------------" << std::endl;
+    fs.flush();
+    fs.close();
+}
+}
 }

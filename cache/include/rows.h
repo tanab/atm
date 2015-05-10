@@ -7,6 +7,8 @@
 #include <util.h>
 #include <enums.hpp>
 
+namespace atm {
+namespace cache {
 ///
 /// \brief The CategoryRow struct represents a row of the category table.
 ///
@@ -84,7 +86,8 @@ struct AffixCategoryRow {
     AffixCategoryRow(const ItemTypes& anAffixType, uint64_t anAffixId, uint64_t aCategoryId,
                      const std::string& theAbstractCategories, const std::string& theSources,
                      const std::wstring& theRawData, const std::wstring& aPartOfSpeech,
-                     uint64_t aDescriptionId, const std::wstring& aLemmaId, bool aReverseDescription)
+                     uint64_t aDescriptionId, const std::wstring& aLemmaId,
+                     bool aReverseDescription)
         : affix_type(anAffixType),
           affix_id(anAffixId),
           category_id(aCategoryId),
@@ -154,3 +157,5 @@ struct CompatibilityRulesRow {
     uint64_t resulting_category;
     std::wstring inflections;
 };
+}
+}

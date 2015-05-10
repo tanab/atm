@@ -3,7 +3,7 @@
 #include <list>
 #include <string>
 #include <vector>
-
+#include <iostream>
 const int LETTER_CHILDREN_SIZE = 37;
 
 class Node {
@@ -15,7 +15,7 @@ class Node {
         static int letter_map[42] = {0 /*0x621*/, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
                                      16, 17, 18, 19, 20, 21, 22, 23, 24, 25 /*0x63A*/, -1, -1, -1,
                                      -1, -1, -1, 26 /*0x641*/, 27, 28, 29, 30, 31, 32, 33, 34, 35};
-        int diff = static_cast<int>(letter) - 1569;  // hamza unicode
+        int diff = static_cast<unsigned int>(letter) - 1569;  // hamza unicode
         return !(diff > 0 && diff < 42) ? -1 : letter_map[diff];
     }
 

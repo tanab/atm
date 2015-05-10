@@ -4,6 +4,11 @@
 #include <enums.hpp>
 #include <types.h>
 
+#include <fstream>
+
+namespace atm {
+namespace common {
+
 ///
 /// \brief The Tree class
 /// \todo Describe and document this class.
@@ -13,7 +18,7 @@ class Tree {
     ///
     /// \brief Tree the constructor.
     ///
-    explicit Tree(AtmCache *cache);
+    explicit Tree(atm::cache::AtmCache *cache);
 
     ///
     /// \brief Tree deleted copy constructor.
@@ -89,12 +94,14 @@ class Tree {
     /// \param category_id
     /// \param size
     /// \param current
-    /// \return
     ///
-    int buildHelper(const ItemTypes &type, uint64_t category_id, int size, Node *current);
+    void buildHelper(const ItemTypes &type, uint64_t category_id, int size, Node *current);
+
+    void printTreeHelper(Node * current_node, int level, std::wfstream &fs);
+    void printTree();
 
   private:
-    AtmCache *m_cache;
+    atm::cache::AtmCache *m_cache;
     bool m_affix;
     int m_last_id;
     int m_letter_nodes;
@@ -104,7 +111,7 @@ class Tree {
     ReverseIdMap m_reverse_id_map;
     Node *m_base;
 
-    bool buildAffixTreeFromPrefix();
-
-    bool buildAffixTreeFromSuffix();
+    bool buildAffixTreeHelper(const std::shared_ptr<atm::cache::AffixRows> rows);
 };
+}
+}

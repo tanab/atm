@@ -15,7 +15,5 @@ std::vector<STRING_TYPE> split(const STRING_TYPE &input, const STRING_TYPE &deli
     boost::split(output, input, boost::is_any_of(delimiter), boost::token_compress_on);
     return output;
 }
-
-
 }
 }

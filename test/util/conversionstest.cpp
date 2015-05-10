@@ -15,4 +15,3 @@ TEST(BoolVectorConversions, ConvertsStringToBitVector) {
     }
     ASSERT_EQ("010000010101010001001101", outcome);
 }
-

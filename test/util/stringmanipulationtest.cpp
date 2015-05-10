@@ -24,3 +24,21 @@ TEST(StringSplitting, SplitsStrings) {
     ASSERT_EQ("T", output.at(1));
     ASSERT_EQ("M", output.at(2));
 }
+
+TEST(StringSplitting, SplitsStringsWithBackSlashes) {
+    string temp = "A\\\\B";
+    string delimiter = "\\\\";
+    auto output = split(temp, delimiter);
+    ASSERT_EQ(static_cast<vector<string>::size_type>(2), output.size());
+    ASSERT_EQ("A", output.at(0));
+    ASSERT_EQ("B", output.at(1));
+}
+
+TEST(StringSplitting, SplitsWideStringsWithBackSlashes) {
+    wstring temp = L"A\\\\B";
+    wstring delimiter = L"\\\\";
+    auto output = split(temp, delimiter);
+    ASSERT_EQ(static_cast<vector<string>::size_type>(2), output.size());
+    ASSERT_EQ(L"A", output.at(0));
+    ASSERT_EQ(L"B", output.at(1));
+}

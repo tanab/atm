@@ -7,14 +7,18 @@ include_directories(${atm-common_INCLUDE_DIRS})
 include_directories(${MYSQLCPPCONN_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${atm-cache_INCLUDE_DIRS})
+include_directories(${atm-util_INCLUDE_DIRS})
 
 link_directories(${MYSQLCPPCONN_LIBRARY_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${atm-cache_LIBRARY_DIRS})
+link_directories(${atm-util_LIBRARY_DIRS})
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${GTEST_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GMOCK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${atm-cache_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${atm-common_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${atm-util_LIBRARIES})
 
 add_test(NAME "${PROJECT_NAME}" COMMAND ${PROJECT_NAME})

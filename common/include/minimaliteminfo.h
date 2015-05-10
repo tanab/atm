@@ -17,13 +17,26 @@ class MinimalItemInfo {
     ///
     /// \brief MinimalItemInfo The default constructor.
     ///
-    MinimalItemInfo() : m_description_id(0), m_category_id(0), m_abstract_categories(MAX_SOURCES) {}
+    //    MinimalItemInfo() : m_description_id(0), m_category_id(0),
+    //    m_abstract_categories(MAX_SOURCES) {}
+    MinimalItemInfo()
+        : m_description(),
+          m_description_id(0),
+          m_category_id(0),
+          m_abstract_categories(),
+          m_raw_data(),
+          m_part_of_speech() {}
+
+    ///
+    /// \brief ~MinimalItemInfo The destructor.
+    ///
+    virtual ~MinimalItemInfo() { m_abstract_categories.clear(); }
 
     ///
     /// \brief updateFrom Updates this instance with values from given \ref AffixCategoryRow
     /// \param row The row to take data from.
     ///
-    void updateFrom(const AffixCategoryRow &row) {
+    void updateFrom(const atm::cache::AffixCategoryRow &row) {
         m_type = row.affix_type;
         m_category_id = row.category_id;
         m_raw_data = row.raw_data;

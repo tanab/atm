@@ -14,6 +14,8 @@ class PreparedStatement;
 class ResultSet;
 }
 
+namespace atm {
+namespace cache {
 class MySqlCache : public AtmCache {
   public:
     explicit MySqlCache();
@@ -23,6 +25,8 @@ class MySqlCache : public AtmCache {
 
     virtual const std::shared_ptr<AffixRows> prefixTable() const override;
     virtual const std::shared_ptr<AffixRows> suffixTable() const override;
+    virtual const std::shared_ptr<AffixRows> stemTable() const override;
+
     virtual const std::shared_ptr<CategoryRows> categoriesTable() const override;
 
     /// \todo Document the purpose of this method.
@@ -49,3 +53,5 @@ class MySqlCache : public AtmCache {
     sql::Driver *m_driver;
     std::unique_ptr<sql::Connection> m_connection;
 };
+}
+}

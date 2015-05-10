@@ -4,15 +4,19 @@
 
 class FullItemInfo : public MinimalItemInfo {
   public:
-    FullItemInfo() : MinimalItemInfo(), m_sources(MAX_SOURCES) {}
+    //    FullItemInfo() : MinimalItemInfo(), m_sources(MAX_SOURCES) {}
+    FullItemInfo() : MinimalItemInfo(), m_sources() {}
+
+    virtual ~FullItemInfo() { m_sources.clear(); }
 
     ///
     /// \brief updateFrom Updates this instance with values from given \ref AffixCategoryRow
     /// \param row The row to take data from.
     ///
-    void updateFrom(const AffixCategoryRow &row) {
+    void updateFrom(const atm::cache::AffixCategoryRow &row) {
         MinimalItemInfo::updateFrom(row);
         m_item_id = row.affix_id;
+        m_sources.clear();
         m_sources = row.sources;
         m_lemma_id = row.lemma_id;
     }
