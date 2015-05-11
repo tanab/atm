@@ -36,12 +36,12 @@ TEST_F(AffixTreeTests, PrefixTreeGenerationShouldNotFail) {
     delete tree;
 }
 
-TEST_F(AffixTreeTests, SuffixTreeGenerationShouldNotFail) {
-    atm::common::Tree tree(cache);
-    ASSERT_TRUE(tree.buildAffixTree(ItemTypes::SUFFIX));
-}
+//TEST_F(AffixTreeTests, SuffixTreeGenerationShouldNotFail) {
+    //atm::common::Tree tree(cache);
+    //ASSERT_TRUE(tree.buildAffixTree(ItemTypes::SUFFIX));
+//}
 
-TEST_F(AffixTreeTests, StemTreeGenerationShouldNotFail) {
-    atm::common::Tree tree(cache);
-    ASSERT_TRUE(tree.buildAffixTree(ItemTypes::STEM));
-}
+//TEST_F(AffixTreeTests, StemTreeGenerationShouldNotFail) {
+    //atm::common::Tree tree(cache);
+    //ASSERT_TRUE(tree.buildAffixTree(ItemTypes::STEM));
+//}

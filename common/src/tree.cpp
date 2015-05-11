@@ -63,7 +63,7 @@ bool Tree::buildAffixTree(const ItemTypes &type) {
     }
 }
 
-bool Tree::buildAffixTreeHelper(const std::shared_ptr<cache::AffixRows> rows) {
+bool Tree::buildAffixTreeHelper(const std::shared_ptr<cache::AffixRows> &rows) {
     wstring name;
     for (const auto &row : *rows) {
         name = removeDiacritics(row.name);
@@ -194,10 +194,10 @@ result:
                                         raw_data, inflected_raw_data, inflection_rule_description);
     // TODO: Check whether commented lines are needed because of the side effects.
     current_node->addChild(result);
-                current_node = result;
+    current_node = result;
     m_result_nodes++;
-                return current_node;
-//    return result;
+    return current_node;
+    //    return result;
 }
 
 void Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, Node *current) {
@@ -205,16 +205,14 @@ void Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, No
         return;
     }
 
-    uint64_t category_id2 = 0;
-    uint64_t resulting_category_id = 0;
-
     // TODO: Are sure that we treat STEM and SUFFIX the same way?
     auto compatibility_rules = m_cache->findCompatibilityRules(
         (type == ItemTypes::PREFIX ? Rules::AA : Rules::CC), category_id);
+
     for (auto it_comp_rules = compatibility_rules.first;
          it_comp_rules != compatibility_rules.second; it_comp_rules++) {
-        category_id2 = it_comp_rules->second.category_id_2;
-        resulting_category_id = it_comp_rules->second.resulting_category;
+        uint64_t category_id2 = it_comp_rules->second.category_id_2;
+        uint64_t resulting_category_id = it_comp_rules->second.resulting_category;
         std::wstring inflections = it_comp_rules->second.inflections;
         bool acceptsState = m_cache->acceptsState(type, resulting_category_id);
         if (acceptsState || m_cache->hasCompatibleAffixes(type, resulting_category_id)) {
@@ -237,7 +235,6 @@ void Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, No
 }
 
 void Tree::printTreeHelper(Node *current_node, int level, wfstream &fs) {
-//    std::wcout << std::wstring(level * 7, L' ') << current_node->toString(true) << std::endl;
     fs << std::wstring(level * 7, L' ') << current_node->toString(true) << std::endl;
     for (auto node : current_node->letterChildren()) {
         if (node != nullptr) {

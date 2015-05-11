@@ -97,7 +97,7 @@ class Tree {
     ///
     void buildHelper(const ItemTypes &type, uint64_t category_id, int size, Node *current);
 
-    void printTreeHelper(Node * current_node, int level, std::wfstream &fs);
+    void printTreeHelper(Node *current_node, int level, std::wfstream &fs);
     void printTree();
 
   private:
@@ -111,7 +111,7 @@ class Tree {
     ReverseIdMap m_reverse_id_map;
     Node *m_base;
 
-    bool buildAffixTreeHelper(const std::shared_ptr<atm::cache::AffixRows> rows);
+    bool buildAffixTreeHelper(const std::shared_ptr<atm::cache::AffixRows> &rows);
 };
 }
 }

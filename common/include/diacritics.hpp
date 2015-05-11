@@ -8,6 +8,8 @@
 
 namespace atm {
 namespace common {
+using namespace util;
+
 const static std::wstring regex_remove_diacritics = std::wstring()
                                                         .append(L"[")
                                                         .append(1, shadde)
@@ -22,7 +24,7 @@ const static std::wstring regex_remove_diacritics = std::wstring()
                                                         .append(L"]");
 ///
 /// \brief removeDiacritics Removes diacritics from the string.
-/// \param s string to strip diacritics from.
+/// \param s a string to strip diacritics from.
 /// \return string without diacritics.
 ///
 inline std::wstring removeDiacritics(const std::wstring &s) {
