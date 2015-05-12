@@ -7,6 +7,10 @@ PRIORITY TWO
 - Maybe result children and letter children should be kept by it's own pointers to avoid cast.
 - Some cache structures depend on id being continuous and to start with 1.
 
+Text handling functions reimplementation
+Macro definitions active:
+    ENABLE_RUNON_WORD_INSIDE_COMPOUND_WORD
+
 typedefd class all_item_info renamed to FullItemInfo
 
 Stemmer class reimplementation

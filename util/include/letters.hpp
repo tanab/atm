@@ -125,6 +125,18 @@ static const std::wstring non_connecting_letters = std::wstring(1, alef)
                                                        .append(1, waw_hamza_above)
                                                        .append(1, zain);
 
+static const std::wstring diacritics = std::wstring(1, aleft_superscript)
+                                           .append(1, damma)
+                                           .append(1, dammatayn)
+                                           .append(1, fatha)
+                                           .append(1, fathatayn)
+                                           .append(1, kasra)
+                                           .append(1, kasratayn)
+                                           .append(1, madda)
+                                           .append(1, shadde)
+                                           .append(1, shadde_alef_above)
+                                           .append(1, sukun);
+
 /// \brief Checks whether given letter is a delimiter.
 ///
 /// \param letter a letter to check.
@@ -164,7 +176,6 @@ inline bool nonConnectingLetter(const wchar_t letter) {
 ///
 /// \return \code true if the letter is a number.
 inline bool number(const wchar_t letter) { return letter >= L'0' && letter <= L'9'; }
-}
 
 /// \brief Checks whether given letter is a number or delimiter.
 ///
@@ -191,6 +202,15 @@ inline bool shamsi(const wchar_t letter) {
     return letter == ta2 || letter == tha2 || letter == dal || letter == thal || letter == ra2 ||
            letter == zain || letter == sheen || letter == seen || letter == sad || letter == dad ||
            letter == tah || letter == zah || letter == lam || letter == noon;
+}
+
+/// \brief Checks whether given letter is a diacritic.
+///
+/// \param letter a letter to check.
+///
+/// \return \code true if the letter is diacritic.
+inline bool diacritic(const wchar_t letter) {
+    return diacritics.find_first_of(letter) != std::string::npos;
 }
 }
 }

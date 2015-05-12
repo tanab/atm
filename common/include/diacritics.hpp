@@ -22,11 +22,12 @@ const static std::wstring regex_remove_diacritics = std::wstring()
                                                         .append(1, dammatayn)
                                                         .append(1, aleft_superscript)
                                                         .append(L"]");
+
+/// \brief Removes diacritics from the given string.
 ///
-/// \brief removeDiacritics Removes diacritics from the string.
-/// \param s a string to strip diacritics from.
-/// \return string without diacritics.
+/// \param s the string to remove diacritics from.
 ///
+/// \return the string without diacritics.
 inline std::wstring removeDiacritics(const std::wstring &s) {
     static boost::wregex diacritics(regex_remove_diacritics);
     return boost::regex_replace(s, diacritics, L"", boost::regex_constants::format_default);
