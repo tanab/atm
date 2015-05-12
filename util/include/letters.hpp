@@ -75,12 +75,12 @@ static const wchar_t zero_width_space = 0xFEFF;     //!< Zero width no-break spa
 
 static const std::wstring punctuations = std::wstring(L":!_\\.,=-'\n\r\"")
                                              .append(1, fasila)
-                                             .append(1, question_mark)
-                                             .append(1, semicolon_ar)
                                              .append(1, full_stop1)
                                              .append(1, full_stop2)
                                              .append(1, full_stop3)
-                                             .append(1, paragraph_separator);
+                                             .append(1, paragraph_separator)
+                                             .append(1, question_mark)
+                                             .append(1, semicolon_ar);
 
 static const std::wstring alefs = std::wstring(1, alef)
                                       .append(1, alef_hamza_above)
@@ -89,18 +89,18 @@ static const std::wstring alefs = std::wstring(1, alef)
                                       .append(1, alef_wasla);
 
 static const std::wstring delimiters = std::wstring(L"[!_ :\\.,()-><{}=*+\\/|'\"\n\t\r")
-                                           .append(1, fasila)
-                                           .append(1, question_mark)
-                                           .append(1, semicolon_ar)
-                                           .append(1, full_stop1)
-                                           .append(1, full_stop2)
-                                           .append(1, full_stop3)
                                            .append(1, double_quotation1)
                                            .append(1, double_quotation2)
                                            .append(1, double_quotation3)
                                            .append(1, double_quotation4)
                                            .append(1, double_quotation5)
                                            .append(1, double_quotation6)
+                                           .append(1, fasila)
+                                           .append(1, full_stop1)
+                                           .append(1, full_stop2)
+                                           .append(1, full_stop3)
+                                           .append(1, question_mark)
+                                           .append(1, semicolon_ar)
                                            .append(1, single_quotation1)
                                            .append(1, single_quotation2)
                                            .append(1, single_quotation3)
@@ -108,6 +108,22 @@ static const std::wstring delimiters = std::wstring(L"[!_ :\\.,()-><{}=*+\\/|'\"
                                            .append(1, single_quotation5)
                                            .append(1, zero_width_space)
                                            .append(L"\\[\\]]");
+
+static const std::wstring non_connecting_letters = std::wstring(1, alef)
+                                                       .append(1, alef_hamza_above)
+                                                       .append(1, alef_hamza_below)
+                                                       .append(1, alef_madda_above)
+                                                       .append(1, alef_maksoura)
+                                                       .append(1, alef_wasla)
+                                                       .append(1, aleft_superscript)
+                                                       .append(1, dal)
+                                                       .append(1, hamza)
+                                                       .append(1, ra2)
+                                                       .append(1, ta2_marbouta)
+                                                       .append(1, thal)
+                                                       .append(1, waw)
+                                                       .append(1, waw_hamza_above)
+                                                       .append(1, zain);
 
 /// \brief Checks whether given letter is a delimiter.
 ///
@@ -133,11 +149,48 @@ inline bool punctuationMark(const wchar_t letter) {
     return punctuations.find_first_of(letter) != std::wstring::npos;
 }
 
-/// \brief Checks if given letter is a number.
+/// \brief Checks whether given letter is a non connecting letter.
+///
+/// \param letter a letter to check.
+///
+/// \return \code true if the letter is a non connecting letter.
+inline bool nonConnectingLetter(const wchar_t letter) {
+    return non_connecting_letters.find_first_of(letter) != std::wstring::npos;
+}
+
+/// \brief Checks whether given letter is a number.
 ///
 /// \param letter a letter to check.
 ///
 /// \return \code true if the letter is a number.
-inline bool isNumber(const wchar_t letter) { return letter >= L'0' && letter <= L'9'; }
+inline bool number(const wchar_t letter) { return letter >= L'0' && letter <= L'9'; }
+}
+
+/// \brief Checks whether given letter is a number or delimiter.
+///
+/// \param letter a letter to check.
+///
+/// \return \code true if the letter is a number or delimiter.
+inline bool delimiterOrNumber(const wchar_t letter) { return number(letter) || delimiter(letter); }
+
+/// \brief Checks whether given letter is a long vowel.
+///
+/// \param letter a letter to check.
+///
+/// \return \code true if the letter is a long vowel.
+inline bool longVowel(const wchar_t letter) {
+    return letter == ya2 || letter == waw || alefs.find_first_of(letter) != std::string::npos;
+}
+
+/// \brief Checks whether given letter is a shamsi letter.
+///
+/// \param letter a letter to check.
+///
+/// \return \code true if the letter is a shamsi letter.
+inline bool shamsi(const wchar_t letter) {
+    return letter == ta2 || letter == tha2 || letter == dal || letter == thal || letter == ra2 ||
+           letter == zain || letter == sheen || letter == seen || letter == sad || letter == dad ||
+           letter == tah || letter == zah || letter == lam || letter == noon;
+}
 }
 }
