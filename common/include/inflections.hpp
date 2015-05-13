@@ -11,6 +11,8 @@ namespace atm {
 namespace common {
 namespace inflections {
 
+using namespace util;
+
 /// \todo document this class.
 class Inflections {
   public:
@@ -40,7 +42,7 @@ class Inflections {
                 auto rule = change_list[0];
                 auto replacement = change_list[1];
                 auto replacement_without_diactitics = removeDiacritics(replacement);
-//                auto &non_diacritic_field = nonDiacriticField();
+                //                auto &non_diacritic_field = nonDiacriticField();
                 auto non_diacritic_field = nonDiacriticField();
                 bool non_diacritic = applyStripDiacriticChange();
                 if (m_apply_plus_rules && rule == L"(+1)") {
@@ -74,17 +76,16 @@ class Inflections {
     virtual std::wstring &nonDiacriticField() = 0;
 
   private:
-    const static std::wstring start_delimiter;// = L"//";
-    const static std::wstring middle_delimiter;// = L"||";
+    const static std::wstring start_delimiter;   // = L"//";
+    const static std::wstring middle_delimiter;  // = L"||";
     // const static std::wstring end_delimiter;// = L"\\\\";
-    const static std::wstring end_delimiter;// = L"\\";
+    const static std::wstring end_delimiter;  // = L"\\";
 };
 
 const std::wstring Inflections::start_delimiter = L"//";
 const std::wstring Inflections::middle_delimiter = L"||";
 // const std::wstring Inflections::end_delimiter = L"\\\\";
 const std::wstring Inflections::end_delimiter = L"\\\\";
-
 
 class RawDataInflections : protected Inflections {
   public:

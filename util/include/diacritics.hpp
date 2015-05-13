@@ -7,8 +7,19 @@
 #include <boost/regex.hpp>
 
 namespace atm {
-namespace common {
-using namespace util;
+namespace util {
+
+enum class Diacritic {
+    FATHA,
+    KASRA,
+    DAMMA,
+    SHADDA,
+    SUUN,
+    FATHATAYN,
+    KASRATAYN,
+    DAMMATAYN,
+    ALEF_SUPERSCRIPT
+};
 
 const static std::wstring regex_remove_diacritics = std::wstring()
                                                         .append(L"[")

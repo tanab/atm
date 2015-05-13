@@ -77,5 +77,26 @@ inline bool equalIgnoreDiacritics(const std::wstring &word1, const std::wstring 
     }
     return true;
 }
+
+/// \brief Checks if the first word is contained in the second.
+///
+/// \param word1 [in] The first word.
+/// \param word2 [in] The second word.
+/// \param i1 [out]
+/// \param i2 [out]
+/// \param force_shadde 
+///
+/// \return \code true if the first word is contained in the second.
+inline bool firstIsContainedInSecond(const std::wstring &word1, const std::wstring &word2, int &i1, int &i2, bool force_shadde = false) {
+    int length1 = word1.length();
+    int length2 = word2.length();
+
+    i1 = -1;
+    i2 = -1;
+
+
+
+    return false;
+}
 }
 }

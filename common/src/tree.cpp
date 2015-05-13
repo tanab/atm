@@ -14,6 +14,8 @@ using namespace std;
 namespace atm {
 namespace common {
 
+using namespace util;
+
 Tree::Tree(cache::AtmCache *cache)
     : m_cache(cache),
       m_affix(false),
