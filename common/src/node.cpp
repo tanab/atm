@@ -12,15 +12,14 @@ Node::Node(const Node &other)
       m_letter_children(other.m_letter_children) {}
 
 Node::~Node() {
-    // TODO: Do we need to delete children too or not?
     removeAllChildren();
     m_result_children.clear();
     m_letter_children.clear();
 }
 
 Node &Node::operator=(const Node &other) {
-    // TODO: Do we need to delete existing children first?
     m_parent = other.m_parent;
+    removeAllChildren();
     m_result_children = other.m_result_children;
     m_letter_children = other.m_letter_children;
     return *this;
@@ -34,13 +33,13 @@ void Node::removeAllChildren() {
         delete node;
         return true;
     });
-//    for_each(m_letter_children.begin(), m_letter_children.end(), [](Node *&node) {
-//        if (node != nullptr) {
-//            node->removeAllChildren();
-//            delete node;
-//            node = nullptr;
-//        }
-//    });
+    for_each(m_letter_children.begin(), m_letter_children.end(), [](Node *&node) {
+        if (node != nullptr) {
+            node->removeAllChildren();
+            delete node;
+            node = nullptr;
+        }
+    });
 }
 
 void Node::addChild(Node *child) {

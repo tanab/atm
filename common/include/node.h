@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
+
+#include <atmcache.h>
+
 const int LETTER_CHILDREN_SIZE = 37;
 
 class Node {
@@ -58,9 +61,11 @@ class Node {
     ///
     /// \brief toString returns string representation of this node.
     /// \param affix is this node an affix node.
+    /// \param cache database cache.
     /// \return string representation of this node.
     ///
-    virtual std::wstring toString(bool affix = false) const = 0;
+    virtual std::wstring toString(bool affix = false,
+                                  atm::cache::AtmCache *cache = nullptr) const = 0;
 
     ///
     /// \brief hasChildren returns whether this node has children
@@ -102,18 +107,14 @@ class Node {
     /// We return reference for performance reasons to avoid unnecessary copying.
     /// \return reference to the list of result children.
     ///
-    std::list<Node *> & resultChildren() {
-        return m_result_children;
-    }
+    std::list<Node *> &resultChildren() { return m_result_children; }
 
     ///
     /// \brief letterChildren returns the reference to the vector of letter children.
     /// We return reference for performance reasons to avoid unnecessary copying.
     /// \return reference to the vector of letter children.
     ///
-    std::vector<Node *> & letterChildren() {
-        return m_letter_children;
-    }
+    std::vector<Node *> &letterChildren() { return m_letter_children; }
 
   private:
     Node *m_parent;                         //!< The parent node.

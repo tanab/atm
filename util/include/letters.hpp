@@ -39,7 +39,7 @@ static const wchar_t qaf = 0x0642;
 static const wchar_t _7a2 = 0x062D;
 static const wchar_t dal = 0x062F;
 static const wchar_t tha2 = 0x062B;
-static const wchar_t aleft_superscript = 0x0670;
+static const wchar_t alef_superscript = 0x0670;
 static const wchar_t ha2 = 0x0647;
 static const wchar_t veh = 0x06A4;
 static const wchar_t feh = 0x0641;
@@ -114,8 +114,8 @@ static const std::wstring non_connecting_letters = std::wstring(1, alef)
                                                        .append(1, alef_hamza_below)
                                                        .append(1, alef_madda_above)
                                                        .append(1, alef_maksoura)
+                                                       .append(1, alef_superscript)
                                                        .append(1, alef_wasla)
-                                                       .append(1, aleft_superscript)
                                                        .append(1, dal)
                                                        .append(1, hamza)
                                                        .append(1, ra2)
@@ -125,7 +125,7 @@ static const std::wstring non_connecting_letters = std::wstring(1, alef)
                                                        .append(1, waw_hamza_above)
                                                        .append(1, zain);
 
-static const std::wstring diacritics = std::wstring(1, aleft_superscript)
+static const std::wstring diacritics = std::wstring(1, alef_superscript)
                                            .append(1, damma)
                                            .append(1, dammatayn)
                                            .append(1, fatha)

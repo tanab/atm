@@ -29,7 +29,9 @@ using CompatibilityRulesMapRange =
 ///
 class AtmCache {
   public:
+    /// \brief Constructor.
     explicit AtmCache() {}
+    /// \brief Destructor.
     virtual ~AtmCache() {}
 
     ///

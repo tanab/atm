@@ -9,6 +9,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <assert.h>
+
 using namespace std;
 
 namespace atm {
@@ -130,8 +132,6 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
 
     while (i < letters.size()) {
         // Add necessary letters
-        //            std::wcout << L"LETTERS: " << letters << L" " << (unsigned int)letters[i]
-        //            << std::endl;
         auto new_node = new LetterNode(letters[i]);
         current_node->addChild(new_node);
         current_node = new_node;
@@ -237,7 +237,7 @@ void Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, No
 }
 
 void Tree::printTreeHelper(Node *current_node, int level, wfstream &fs) {
-    fs << std::wstring(level * 7, L' ') << current_node->toString(true) << std::endl;
+    fs << std::wstring(level * 7, L' ') << current_node->toString(true, m_cache) << std::endl;
     for (auto node : current_node->letterChildren()) {
         if (node != nullptr) {
             printTreeHelper(node, level + 1, fs);

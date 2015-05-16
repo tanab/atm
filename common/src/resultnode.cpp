@@ -30,8 +30,16 @@ bool ResultNode::letterNode() const { return false; }
 
 wchar_t ResultNode::letter() const { return 0; }
 
-// TODO: Needs database or cache access implemented.
-wstring ResultNode::toString(bool /*affix*/) const { return L"UNIMPLEMENTED"; }
+wstring ResultNode::toString(bool affix, atm::cache::AtmCache *cache) const {
+    wstring retVal = L"-";
+    wstring tmp = affix ? cache->categoriesTable()->at(m_previous_category_id).name
+                        : to_wstring(m_previous_category_id);
+    retVal.append(tmp).append(L">[");
+    tmp = affix ? cache->categoriesTable()->at(m_resulting_category_id).name
+                : to_wstring(m_resulting_category_id);
+    retVal.append(tmp).append(L"]");
+    return retVal;
+}
 
 void ResultNode::addRawData(const wstring &original_string, const wstring &inflected_string) {
     RawData r(original_string, inflected_string);

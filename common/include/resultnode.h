@@ -16,9 +16,10 @@ class ResultNode : public Node {
     /// \param inflected_string The inflected string.
     /// \param inflection_rule The inflection rule.
     ///
-    explicit ResultNode(uint64_t affix_id, uint64_t previous_category_id, uint64_t resulting_category_id,
-               bool accepts_state, const std::wstring& original_string,
-               const std::wstring& inflected_string, const std::wstring& inflection_rule);
+    explicit ResultNode(uint64_t affix_id, uint64_t previous_category_id,
+                        uint64_t resulting_category_id, bool accepts_state,
+                        const std::wstring& original_string, const std::wstring& inflected_string,
+                        const std::wstring& inflection_rule);
 
     ///
     /// \brief ResultNode The copy constructor.
@@ -45,7 +46,8 @@ class ResultNode : public Node {
     virtual wchar_t letter() const override;
 
     /// \copydoc Node::toString
-    virtual std::wstring toString(bool affix = false) const override;
+    virtual std::wstring toString(bool affix = true,
+                                  atm::cache::AtmCache* cache = nullptr) const override;
 
     ///
     /// \brief addRawData Adds another raw data item if such doesn't already exist.
@@ -92,7 +94,7 @@ class ResultNode : public Node {
     uint64_t m_previous_category_id;   //!< The previous category id.
     uint64_t m_affix_id;               //!< The affix id.
     uint64_t m_resulting_category_id;  //!< The resulting category id;
-    bool m_accepts_state;             //!< Whether to accept state.
-    std::wstring m_inflection_rule;   //!< The inflection rule.
-    std::list<RawData> m_raw_data;    //!< The raw data.
+    bool m_accepts_state;              //!< Whether to accept state.
+    std::wstring m_inflection_rule;    //!< The inflection rule.
+    std::list<RawData> m_raw_data;     //!< The raw data.
 };
