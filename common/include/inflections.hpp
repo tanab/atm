@@ -85,7 +85,7 @@ class Inflections {
 const std::wstring Inflections::start_delimiter = L"//";
 const std::wstring Inflections::middle_delimiter = L"||";
 // const std::wstring Inflections::end_delimiter = L"\\\\";
-const std::wstring Inflections::end_delimiter = L"\\\\";
+const std::wstring Inflections::end_delimiter = L"\\";
 
 class RawDataInflections : protected Inflections {
   public:

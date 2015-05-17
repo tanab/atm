@@ -36,7 +36,7 @@ bool MySqlCache::initCache() {
         unique_ptr<sql::PreparedStatement> statement(
             m_connection->prepareStatement("SELECT id, name FROM prefix ORDER BY id ASC"));
         unique_ptr<sql::ResultSet> resultSet(statement->executeQuery());
-        m_prefix_rows = make_shared<vector<const AffixRow>>();
+        m_prefix_rows = make_shared<vector<AffixRow>>();
         while (resultSet->next()) {
             m_prefix_rows->emplace_back(
                 ItemTypes::PREFIX, resultSet->getUInt64(1),
@@ -47,7 +47,7 @@ bool MySqlCache::initCache() {
         statement.reset(m_connection->prepareStatement(
             "SELECT id, name, grammar_stem_id, sources FROM stem ORDER BY id ASC"));
         resultSet.reset(statement->executeQuery());
-        m_stem_rows = make_shared<vector<const AffixRow>>();
+        m_stem_rows = make_shared<vector<AffixRow>>();
         while (resultSet->next()) {
             m_stem_rows->emplace_back(
                 ItemTypes::STEM, resultSet->getUInt64(1),
@@ -60,7 +60,7 @@ bool MySqlCache::initCache() {
             m_connection->prepareStatement("SELECT id, name FROM suffix ORDER BY id ASC"));
         resultSet.reset(statement->executeQuery());
 
-        m_suffix_rows = make_shared<vector<const AffixRow>>();
+        m_suffix_rows = make_shared<vector<AffixRow>>();
         while (resultSet->next()) {
             m_suffix_rows->emplace_back(
                 ItemTypes::SUFFIX, resultSet->getUInt64(1),

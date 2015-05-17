@@ -236,7 +236,11 @@ void Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, No
     }
 }
 
+int max_level = 1;
 void Tree::printTreeHelper(Node *current_node, int level, wfstream &fs) {
+    if (level > max_level) {
+        return;
+    }
     fs << std::wstring(level * 7, L' ') << current_node->toString(true, m_cache) << std::endl;
     for (auto node : current_node->letterChildren()) {
         if (node != nullptr) {

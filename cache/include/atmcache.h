@@ -12,14 +12,14 @@
 namespace atm {
 namespace cache {
 
-using CategoryRows = std::vector<const CategoryRow>;
-using AffixRows = std::vector<const AffixRow>;
+using CategoryRows = std::vector<CategoryRow>;
+using AffixRows = std::vector<AffixRow>;
 
-using AffixCategoryMap = std::multimap<uint64_t, const AffixCategoryRow>;
+using AffixCategoryMap = std::multimap<uint64_t, AffixCategoryRow>;
 using AffixCategoryMapRange = std::pair<AffixCategoryMap::iterator, AffixCategoryMap::iterator>;
 
 using CompatibilityRulesKey = std::pair<uint64_t, Rules>;
-using CompatibilityRulesMap = std::multimap<CompatibilityRulesKey, const CompatibilityRulesRow>;
+using CompatibilityRulesMap = std::multimap<CompatibilityRulesKey, CompatibilityRulesRow>;
 using CompatibilityRulesMapRange =
     std::pair<CompatibilityRulesMap::iterator, CompatibilityRulesMap::iterator>;
 
