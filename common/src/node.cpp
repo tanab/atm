@@ -26,7 +26,7 @@ Node &Node::operator=(const Node &other) {
 }
 
 void Node::removeAllChildren() {
-    for (auto &child : m_result_children) {
+    for (auto child : m_result_children) {
         child->removeAllChildren();
     }
     m_result_children.remove_if([](Node *node) {

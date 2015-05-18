@@ -24,7 +24,7 @@ class Inflections {
             return;
         }
         auto parts = util::split(inflection, end_delimiter);
-        for (auto &part : parts) {
+        for (auto part : parts) {
             boost::algorithm::trim_left(part);
             if (part.empty()) {
                 continue;
@@ -42,7 +42,7 @@ class Inflections {
                 auto rule = change_list[0];
                 auto replacement = change_list[1];
                 auto replacement_without_diactitics = removeDiacritics(replacement);
-                //                auto &non_diacritic_field = nonDiacriticField();
+//                auto &non_diacritic_field = nonDiacriticField();
                 auto non_diacritic_field = nonDiacriticField();
                 bool non_diacritic = applyStripDiacriticChange();
                 if (m_apply_plus_rules && rule == L"(+1)") {
@@ -76,10 +76,9 @@ class Inflections {
     virtual std::wstring &nonDiacriticField() = 0;
 
   private:
-    const static std::wstring start_delimiter;   // = L"//";
-    const static std::wstring middle_delimiter;  // = L"||";
-    // const static std::wstring end_delimiter;// = L"\\\\";
-    const static std::wstring end_delimiter;  // = L"\\";
+    const static std::wstring start_delimiter;
+    const static std::wstring middle_delimiter;
+    const static std::wstring end_delimiter;
 };
 
 const std::wstring Inflections::start_delimiter = L"//";

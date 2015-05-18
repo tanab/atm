@@ -32,10 +32,10 @@ wchar_t ResultNode::letter() const { return 0; }
 
 wstring ResultNode::toString(bool affix, atm::cache::AtmCache *cache) const {
     wstring retVal = L"-";
-    wstring tmp = affix ? cache->categoriesTable()->at(m_previous_category_id).name
+    wstring tmp = affix && cache != nullptr ? cache->categoriesTable()->at(m_previous_category_id - 1).name
                         : to_wstring(m_previous_category_id);
     retVal.append(tmp).append(L">[");
-    tmp = affix ? cache->categoriesTable()->at(m_resulting_category_id).name
+    tmp = affix && cache != nullptr ? cache->categoriesTable()->at(m_resulting_category_id - 1).name
                 : to_wstring(m_resulting_category_id);
     retVal.append(tmp).append(L"]");
     return retVal;
