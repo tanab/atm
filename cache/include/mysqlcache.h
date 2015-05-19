@@ -3,6 +3,8 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <atomic>
+#include <mutex>
 
 #include <atmcache.h>
 #include <rows.h>
@@ -52,6 +54,7 @@ class MySqlCache : public AtmCache {
   private:
     sql::Driver *m_driver;
     std::unique_ptr<sql::Connection> m_connection;
+    std::once_flag m_once_flag;
 };
 }
 }

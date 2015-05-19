@@ -24,7 +24,9 @@ Tree::Tree(cache::AtmCache *cache)
       m_last_id(-1),
       m_letter_nodes(1),
       m_result_nodes(0),
-      m_base(new LetterNode(L'\0')) {}
+      m_base(new LetterNode(L'\0')) {
+    std::wcout.imbue(std::locale(""));
+}
 
 Tree::~Tree() { delete m_base; }
 
@@ -93,6 +95,11 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
                        uint64_t resulting_category_id, bool accepts_state, const wstring &raw_data,
                        const wstring &inflected_raw_data,
                        const wstring &inflection_rule_description, Node *current_node) {
+    wcout << L"letters: '" << letters << L"' affix_id: " << affix_id << L" category_id: "
+          << category_id << L" resulting_category_id: " << resulting_category_id
+          << L" accepts_state: " << accepts_state << L" raw_data: '" << raw_data
+          << L"' inflected_raw_data: '" << inflected_raw_data << L"' inflection_rule_description: '"
+          << inflection_rule_description << L"'" << std::endl;
     if (current_node->letterNode() && current_node != m_base) {
         cerr << "Provided node is a letter node or it is not a base node." << endl;
         return nullptr;

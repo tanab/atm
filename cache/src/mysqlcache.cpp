@@ -9,6 +9,8 @@
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 
+#include <iostream>
+
 namespace atm {
 namespace cache {
 
@@ -30,8 +32,7 @@ MySqlCache::MySqlCache() : AtmCache() {
 MySqlCache::~MySqlCache() { m_connection->close(); }
 
 bool MySqlCache::initCache() {
-    static once_flag once;
-    call_once(once, [this] {
+    call_once(m_once_flag, [this] {
         // Load prefix table
         unique_ptr<sql::PreparedStatement> statement(
             m_connection->prepareStatement("SELECT id, name FROM prefix ORDER BY id ASC"));
@@ -129,7 +130,7 @@ bool MySqlCache::initCache() {
         while (resultSet->next()) {
             uint64_t key = resultSet->getUInt64(1);
             uint64_t category_id = resultSet->getUInt64(2);
-            m_suffix_category_rows->insert(pair<uint64_t, AffixCategoryRow>(
+            m_stem_category_rows->insert(pair<uint64_t, AffixCategoryRow>(
                 key, AffixCategoryRow(
                          ItemTypes::STEM, key, resultSet->getUInt64(2), resultSet->getString(3),
                          resultSet->getString(4),
@@ -137,7 +138,7 @@ bool MySqlCache::initCache() {
                          to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
                          resultSet->getUInt64(7),
                          to_utf<wchar_t>(resultSet->getString(8).asStdString(), "UTF-8"), false)));
-            m_suffix_category_rows_by_category_id->insert(pair<uint64_t, AffixCategoryRow>(
+            m_stem_category_rows_by_category_id->insert(pair<uint64_t, AffixCategoryRow>(
                 category_id,
                 AffixCategoryRow(ItemTypes::STEM, key, resultSet->getUInt64(2),
                                  resultSet->getString(3), resultSet->getString(4),
@@ -185,6 +186,29 @@ bool MySqlCache::initCache() {
                 static_cast<ItemTypes>(resultSet->getUInt(3)), resultSet->getString(4),
                 resultSet->getBoolean(5));
         }
+
+        std::cout << "Cache statistics:" << std::endl;
+        std::cout << "prefix rows                        : " << m_prefix_rows->size() << std::endl;
+        std::cout << "suffix rows                        : " << m_suffix_rows->size() << std::endl;
+        std::cout << "stem rows                          : " << m_stem_rows->size() << std::endl;
+        std::cout << "category rows                      : " << m_category_rows->size()
+                  << std::endl;
+        std::cout << "prefix category rows               : " << m_prefix_category_rows->size()
+                  << std::endl;
+        std::cout << "prefix category rows by category id: "
+                  << m_prefix_category_rows_by_category_id->size() << std::endl;
+        std::cout << "suffix category rows               : " << m_suffix_category_rows->size()
+                  << std::endl;
+        std::cout << "suffix category rows by category id: "
+                  << m_suffix_category_rows_by_category_id->size() << std::endl;
+        std::cout << "stem category rows                 : " << m_stem_category_rows->size()
+                  << std::endl;
+        std::cout << "stem category rows by category id  : "
+                  << m_stem_category_rows_by_category_id->size() << std::endl;
+        std::cout << "compatibility rules rows cat 1     : " << m_compatibility_rules_rows_1->size()
+                  << std::endl;
+        std::cout << "compatibility rules rows cat 2     : " << m_compatibility_rules_rows_2->size()
+                  << std::endl;
     });
 
     return true;
