@@ -187,28 +187,28 @@ bool MySqlCache::initCache() {
                 resultSet->getBoolean(5));
         }
 
-        std::cout << "Cache statistics:" << std::endl;
-        std::cout << "prefix rows                        : " << m_prefix_rows->size() << std::endl;
-        std::cout << "suffix rows                        : " << m_suffix_rows->size() << std::endl;
-        std::cout << "stem rows                          : " << m_stem_rows->size() << std::endl;
-        std::cout << "category rows                      : " << m_category_rows->size()
-                  << std::endl;
-        std::cout << "prefix category rows               : " << m_prefix_category_rows->size()
-                  << std::endl;
-        std::cout << "prefix category rows by category id: "
-                  << m_prefix_category_rows_by_category_id->size() << std::endl;
-        std::cout << "suffix category rows               : " << m_suffix_category_rows->size()
-                  << std::endl;
-        std::cout << "suffix category rows by category id: "
-                  << m_suffix_category_rows_by_category_id->size() << std::endl;
-        std::cout << "stem category rows                 : " << m_stem_category_rows->size()
-                  << std::endl;
-        std::cout << "stem category rows by category id  : "
-                  << m_stem_category_rows_by_category_id->size() << std::endl;
-        std::cout << "compatibility rules rows cat 1     : " << m_compatibility_rules_rows_1->size()
-                  << std::endl;
-        std::cout << "compatibility rules rows cat 2     : " << m_compatibility_rules_rows_2->size()
-                  << std::endl;
+        //std::cout << "Cache statistics:" << std::endl;
+        //std::cout << "prefix rows                        : " << m_prefix_rows->size() << std::endl;
+        //std::cout << "suffix rows                        : " << m_suffix_rows->size() << std::endl;
+        //std::cout << "stem rows                          : " << m_stem_rows->size() << std::endl;
+        //std::cout << "category rows                      : " << m_category_rows->size()
+                  //<< std::endl;
+        //std::cout << "prefix category rows               : " << m_prefix_category_rows->size()
+                  //<< std::endl;
+        //std::cout << "prefix category rows by category id: "
+                  //<< m_prefix_category_rows_by_category_id->size() << std::endl;
+        //std::cout << "suffix category rows               : " << m_suffix_category_rows->size()
+                  //<< std::endl;
+        //std::cout << "suffix category rows by category id: "
+                  //<< m_suffix_category_rows_by_category_id->size() << std::endl;
+        //std::cout << "stem category rows                 : " << m_stem_category_rows->size()
+                  //<< std::endl;
+        //std::cout << "stem category rows by category id  : "
+                  //<< m_stem_category_rows_by_category_id->size() << std::endl;
+        //std::cout << "compatibility rules rows cat 1     : " << m_compatibility_rules_rows_1->size()
+                  //<< std::endl;
+        //std::cout << "compatibility rules rows cat 2     : " << m_compatibility_rules_rows_2->size()
+                  //<< std::endl;
     });
 
     return true;
@@ -235,7 +235,7 @@ const AffixCategoryMapRange MySqlCache::findStemCategories(uint64_t stem_id) con
 }
 
 const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t category_id) const {
-    ItemTypes type = m_category_rows->at(category_id).type;
+    ItemTypes type = m_category_rows->at(category_id - 1).type;
     switch (type) {
         case ItemTypes::PREFIX:
             return m_prefix_category_rows_by_category_id->equal_range(category_id);
@@ -299,7 +299,7 @@ CompatibilityRulesMapRange MySqlCache::findCompatibilityRules(const Rules &rule,
                                           m_compatibility_rules_rows_1->end());
     }
 
-    ItemTypes type_of_category = m_category_rows->at(category_id).type;
+    ItemTypes type_of_category = m_category_rows->at(category_id - 1).type;
     if ((first ? type1 : type2) != type_of_category) {
         return CompatibilityRulesMapRange(m_compatibility_rules_rows_1->end(),
                                           m_compatibility_rules_rows_1->end());

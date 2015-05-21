@@ -91,16 +91,12 @@ bool Tree::buildAffixTreeHelper(const std::shared_ptr<cache::AffixRows> &rows) {
     return true;
 }
 
+// TODO: Fix this ugly goto!!!
 Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t category_id,
                        uint64_t resulting_category_id, bool accepts_state, const wstring &raw_data,
                        const wstring &inflected_raw_data,
                        const wstring &inflection_rule_description, Node *current_node) {
-    wcout << L"letters: '" << letters << L"' affix_id: " << affix_id << L" category_id: "
-          << category_id << L" resulting_category_id: " << resulting_category_id
-          << L" accepts_state: " << accepts_state << L" raw_data: '" << raw_data
-          << L"' inflected_raw_data: '" << inflected_raw_data << L"' inflection_rule_description: '"
-          << inflection_rule_description << L"'" << std::endl;
-    if (current_node->letterNode() && current_node != m_base) {
+   if (current_node->letterNode() && current_node != m_base) {
         cerr << "Provided node is a letter node or it is not a base node." << endl;
         return nullptr;
     }
@@ -130,7 +126,7 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
 
     if (letters.size() == 0 && i == 0) {
         // Add a null letter
-        // TODO: Why do we add null letter?
+        // TODO: Why do we add null letter? Also, this can never be reached!?
         auto new_node = new LetterNode(L'\0');
         current_node->addChild(new_node);
         current_node = new_node;
@@ -146,47 +142,6 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
         i++;
     }
 
-// The original implementation used ugly coditions with goto.
-//    if (letters.size() != 0) {
-//        current_letter = letters[0];
-//    } else {
-//        current_letter = L'\0';
-//    }
-
-//    if (letters.size() != 0 && current_node != m_base) {
-//        do {
-//            matching_letter_node =
-//                dynamic_cast<LetterNode *>(current_node->letterChild(current_letter));
-//            if (matching_letter_node != nullptr) {
-//                current_node = matching_letter_node;
-//                current_letter = letters[++i];
-//            } else {
-//                break;
-//            }
-//        } while (i < letters.size());
-
-//        if (letters.size() == 0 && i == 0) {
-//            // Add a null letter
-//            // TODO: Why do we add null letter?
-//            auto new_node = new LetterNode(L'\0');
-//            current_node->addChild(new_node);
-//            current_node = new_node;
-//            m_letter_nodes++;
-//        }
-
-//        while (i < letters.size()) {
-//            // Add necessary letters
-//            //            std::wcout << L"LETTERS: " << letters << L" " << (unsigned
-//            int)letters[i]
-//            //            << std::endl;
-//            auto new_node = new LetterNode(letters[i]);
-//            current_node->addChild(new_node);
-//            current_node = new_node;
-//            m_letter_nodes++;
-//            i++;
-//        }
-//    }
-
 result:
     for (const auto tmp : current_node->resultChildren()) {
         ResultNode *old_result = static_cast<ResultNode *>(tmp);
@@ -201,12 +156,10 @@ result:
 
     ResultNode *result = new ResultNode(affix_id, category_id, resulting_category_id, accepts_state,
                                         raw_data, inflected_raw_data, inflection_rule_description);
-    // TODO: Check whether commented lines are needed because of the side effects.
     current_node->addChild(result);
     current_node = result;
     m_result_nodes++;
     return current_node;
-    //    return result;
 }
 
 void Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, Node *current) {

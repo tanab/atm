@@ -16,14 +16,6 @@ class AffixTreeTests : public ::testing::Test {
     virtual void SetUp() {
         cache = new atm::cache::MySqlCache();
         cache->initCache();
-        for (int i = 1; i <= 14; i++) {
-            auto prefix_categories = cache->findPrefixCategories(i);
-            int j = 0;
-            for (auto it = prefix_categories.first; it != prefix_categories.second; it++) {
-                j++;
-            }
-            std::cout << "PREFIX_ID: " << i << " PREFIX CATEGORIRES: " << j << std::endl;
-        }
     }
 
     virtual void TearDown() { delete cache; }
