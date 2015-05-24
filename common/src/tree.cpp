@@ -179,7 +179,7 @@ void Tree::buildHelper(const ItemTypes &type, uint64_t category_id, int size, No
         std::wstring inflections = it_comp_rules->second.inflections;
         bool acceptsState = m_cache->acceptsState(type, resulting_category_id);
         if (acceptsState || m_cache->hasCompatibleAffixes(type, resulting_category_id)) {
-            auto affix_categories = m_cache->findAffixCategories(category_id2);
+            auto affix_categories = m_cache->findAffixCategoriesByCategoryId(category_id2, type);
             for (auto it_affix_cat = affix_categories.first;
                  it_affix_cat != affix_categories.second; it_affix_cat++) {
                 std::wstring name = m_cache->findAffixName(it_affix_cat->second.affix_type,

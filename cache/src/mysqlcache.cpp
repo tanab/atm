@@ -238,8 +238,9 @@ const AffixCategoryMapRange MySqlCache::findStemCategories(uint64_t stem_id) con
     return m_stem_category_rows->equal_range(stem_id);
 }
 
-const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t affix_id, const ItemTypes &item_type) const {
-    switch(item_type) {
+const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t affix_id,
+                                                            const ItemTypes &item_type) const {
+    switch (item_type) {
         case ItemTypes::PREFIX:
             return findPrefixCategories(affix_id);
         case ItemTypes::SUFFIX:
@@ -254,6 +255,20 @@ const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t affix_id, c
 const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t category_id) const {
     ItemTypes type = m_category_rows->at(category_id - 1).type;
     switch (type) {
+        case ItemTypes::PREFIX:
+            return m_prefix_category_rows_by_category_id->equal_range(category_id);
+        case ItemTypes::STEM:
+            return m_stem_category_rows_by_category_id->equal_range(category_id);
+        case ItemTypes::SUFFIX:
+            return m_suffix_category_rows_by_category_id->equal_range(category_id);
+        default:
+            return AffixCategoryMapRange();
+    }
+}
+
+const AffixCategoryMapRange MySqlCache::findAffixCategoriesByCategoryId(
+    uint64_t category_id, const ItemTypes &item_type) const {
+    switch (item_type) {
         case ItemTypes::PREFIX:
             return m_prefix_category_rows_by_category_id->equal_range(category_id);
         case ItemTypes::STEM:
