@@ -43,6 +43,9 @@ class MySqlCache : public AtmCache {
 
     virtual const AffixCategoryMapRange findStemCategories(uint64_t stem_id) const override;
 
+    virtual const AffixCategoryMapRange findAffixCategories(
+        uint64_t affix_id, const ItemTypes &item_type) const override;
+
     virtual const AffixCategoryMapRange findAffixCategories(uint64_t category_id) const override;
 
     virtual std::wstring findAffixName(const ItemTypes &type, uint64_t affix_id) const override;

@@ -28,20 +28,20 @@ TEST(ApplyingInflections, ApplyingInflectionsOnASpacesOnlyStringShouldNotChangeI
     ASSERT_EQ(true, input.find_first_not_of(L' ') == std::wstring::npos);
 }
 
-#include <iostream>
 TEST_F(AffixTreeTests, PrefixTreeGenerationShouldNotFail) {
-    atm::common::Tree *tree = new atm::common::Tree(cache);
-    ASSERT_TRUE(tree->buildAffixTree(ItemTypes::PREFIX));
-    tree->printTree();
-    delete tree;
+    atm::common::Tree tree(cache);
+    ASSERT_TRUE(tree.buildAffixTree(ItemTypes::PREFIX));
+    tree.printTree();
 }
 
-//TEST_F(AffixTreeTests, SuffixTreeGenerationShouldNotFail) {
-    //atm::common::Tree tree(cache);
-    //ASSERT_TRUE(tree.buildAffixTree(ItemTypes::SUFFIX));
-//}
+TEST_F(AffixTreeTests, SuffixTreeGenerationShouldNotFail) {
+    atm::common::Tree tree(cache);
+    ASSERT_TRUE(tree.buildAffixTree(ItemTypes::SUFFIX));
+    tree.printTree();
+}
 
-//TEST_F(AffixTreeTests, StemTreeGenerationShouldNotFail) {
-    //atm::common::Tree tree(cache);
-    //ASSERT_TRUE(tree.buildAffixTree(ItemTypes::STEM));
-//}
+TEST_F(AffixTreeTests, StemTreeGenerationShouldNotFail) {
+    atm::common::Tree tree(cache);
+    ASSERT_TRUE(tree.buildAffixTree(ItemTypes::STEM));
+    tree.printTree();
+}

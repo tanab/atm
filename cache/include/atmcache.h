@@ -120,6 +120,14 @@ class AtmCache {
     ///
     virtual const AffixCategoryMapRange findStemCategories(uint64_t stem_id) const = 0;
 
+    /// \brief Helper function. Calls \ref findPrefixCategories, \ref findSuffixCategories or \ref findStemCategories according to the passed \code item_type.
+    ///
+    /// \param affix_id affix id
+    /// \param item_type item type
+    ///
+    /// \return pair of iterators that mark fist and last row found.
+    virtual const AffixCategoryMapRange findAffixCategories(uint64_t affix_id, const ItemTypes &item_type) const = 0;
+
     ///
     /// \brief findAffixCategories returns affix categories for given \code category_id.
     /// \param category_id id of the category.

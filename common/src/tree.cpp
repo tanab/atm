@@ -74,8 +74,9 @@ bool Tree::buildAffixTreeHelper(const std::shared_ptr<cache::AffixRows> &rows) {
     for (const auto &row : *rows) {
         name = removeDiacritics(row.name);
         auto affix_id = row.id;
-        cache::AffixCategoryMapRange prefix_categories = m_cache->findPrefixCategories(affix_id);
-        for (auto it = prefix_categories.first; it != prefix_categories.second; it++) {
+        cache::AffixCategoryMapRange affix_categories =
+            m_cache->findAffixCategories(affix_id, m_type);
+        for (auto it = affix_categories.first; it != affix_categories.second; it++) {
             bool acceptsState =
                 m_cache->acceptsState(it->second.affix_type, it->second.category_id);
             if (acceptsState ||
@@ -96,7 +97,7 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
                        uint64_t resulting_category_id, bool accepts_state, const wstring &raw_data,
                        const wstring &inflected_raw_data,
                        const wstring &inflection_rule_description, Node *current_node) {
-   if (current_node->letterNode() && current_node != m_base) {
+    if (current_node->letterNode() && current_node != m_base) {
         cerr << "Provided node is a letter node or it is not a base node." << endl;
         return nullptr;
     }
@@ -214,9 +215,36 @@ void Tree::printTree() {
     std::wcout.imbue(std::locale(""));
     wfstream fs;
     fs.imbue(std::locale(""));
-    fs.open("/tmp/prefix_tree.txt", fstream::out);
+    switch (m_type) {
+        case ItemTypes::PREFIX:
+            fs.open("/tmp/atm_prefix_tree.txt", fstream::out);
+            break;
+        case ItemTypes::SUFFIX:
+            fs.open("/tmp/atm_suffix_tree.txt", fstream::out);
+            break;
+        case ItemTypes::STEM:
+            fs.open("/tmp/atm_stem_tree.txt", fstream::out);
+            break;
+        default:
+            fs.open("/tmp/atm_unknown_tree.txt", fstream::out);
+            break;
+    }
+
     fs << "----------------------------------------" << std::endl;
-    fs << "\t prefix Tree" << std::endl;
+    switch (m_type) {
+        case ItemTypes::PREFIX:
+            fs << "\t Prefix Tree" << std::endl;
+            break;
+        case ItemTypes::SUFFIX:
+            fs << "\t Suffix Tree" << std::endl;
+            break;
+        case ItemTypes::STEM:
+            fs << "\t Stem Tree" << std::endl;
+            break;
+        default:
+            fs << "\t Unknown Tree" << std::endl;
+            break;
+    }
     fs << "----------------------------------------" << std::endl;
     printTreeHelper(m_base, 0, fs);
     fs << "----------------------------------------" << std::endl;

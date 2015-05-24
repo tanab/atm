@@ -4,7 +4,7 @@
 using namespace std;
 
 Node::Node(Node *parent)
-    : m_parent(parent), m_result_children(), m_letter_children(LETTER_CHILDREN_SIZE) {}
+    : m_parent(parent), m_result_children(), m_letter_children(LETTER_CHILDREN_SIZE, nullptr) {}
 
 Node::Node(const Node &other)
     : m_parent(other.m_parent),

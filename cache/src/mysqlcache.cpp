@@ -187,28 +187,32 @@ bool MySqlCache::initCache() {
                 resultSet->getBoolean(5));
         }
 
-        //std::cout << "Cache statistics:" << std::endl;
-        //std::cout << "prefix rows                        : " << m_prefix_rows->size() << std::endl;
-        //std::cout << "suffix rows                        : " << m_suffix_rows->size() << std::endl;
-        //std::cout << "stem rows                          : " << m_stem_rows->size() << std::endl;
-        //std::cout << "category rows                      : " << m_category_rows->size()
-                  //<< std::endl;
-        //std::cout << "prefix category rows               : " << m_prefix_category_rows->size()
-                  //<< std::endl;
-        //std::cout << "prefix category rows by category id: "
-                  //<< m_prefix_category_rows_by_category_id->size() << std::endl;
-        //std::cout << "suffix category rows               : " << m_suffix_category_rows->size()
-                  //<< std::endl;
-        //std::cout << "suffix category rows by category id: "
-                  //<< m_suffix_category_rows_by_category_id->size() << std::endl;
-        //std::cout << "stem category rows                 : " << m_stem_category_rows->size()
-                  //<< std::endl;
-        //std::cout << "stem category rows by category id  : "
-                  //<< m_stem_category_rows_by_category_id->size() << std::endl;
-        //std::cout << "compatibility rules rows cat 1     : " << m_compatibility_rules_rows_1->size()
-                  //<< std::endl;
-        //std::cout << "compatibility rules rows cat 2     : " << m_compatibility_rules_rows_2->size()
-                  //<< std::endl;
+        // std::cout << "Cache statistics:" << std::endl;
+        // std::cout << "prefix rows                        : " << m_prefix_rows->size() <<
+        // std::endl;
+        // std::cout << "suffix rows                        : " << m_suffix_rows->size() <<
+        // std::endl;
+        // std::cout << "stem rows                          : " << m_stem_rows->size() << std::endl;
+        // std::cout << "category rows                      : " << m_category_rows->size()
+        //<< std::endl;
+        // std::cout << "prefix category rows               : " << m_prefix_category_rows->size()
+        //<< std::endl;
+        // std::cout << "prefix category rows by category id: "
+        //<< m_prefix_category_rows_by_category_id->size() << std::endl;
+        // std::cout << "suffix category rows               : " << m_suffix_category_rows->size()
+        //<< std::endl;
+        // std::cout << "suffix category rows by category id: "
+        //<< m_suffix_category_rows_by_category_id->size() << std::endl;
+        // std::cout << "stem category rows                 : " << m_stem_category_rows->size()
+        //<< std::endl;
+        // std::cout << "stem category rows by category id  : "
+        //<< m_stem_category_rows_by_category_id->size() << std::endl;
+        // std::cout << "compatibility rules rows cat 1     : " <<
+        // m_compatibility_rules_rows_1->size()
+        //<< std::endl;
+        // std::cout << "compatibility rules rows cat 2     : " <<
+        // m_compatibility_rules_rows_2->size()
+        //<< std::endl;
     });
 
     return true;
@@ -232,6 +236,19 @@ const AffixCategoryMapRange MySqlCache::findSuffixCategories(uint64_t suffix_id)
 
 const AffixCategoryMapRange MySqlCache::findStemCategories(uint64_t stem_id) const {
     return m_stem_category_rows->equal_range(stem_id);
+}
+
+const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t affix_id, const ItemTypes &item_type) const {
+    switch(item_type) {
+        case ItemTypes::PREFIX:
+            return findPrefixCategories(affix_id);
+        case ItemTypes::SUFFIX:
+            return findSuffixCategories(affix_id);
+        case ItemTypes::STEM:
+            return findStemCategories(affix_id);
+        default:
+            return AffixCategoryMapRange();
+    }
 }
 
 const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t category_id) const {
