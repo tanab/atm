@@ -11,7 +11,7 @@
 *Build instructions*
 - Checkout the code
 - Create build directory
-- Run: cmake <source_dir>
+- cmake source_dir
 - make
 - make test
 
