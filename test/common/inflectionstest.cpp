@@ -40,8 +40,8 @@ TEST_F(AffixTreeTests, SuffixTreeGenerationShouldNotFail) {
     tree.printTree();
 }
 
-TEST_F(AffixTreeTests, StemTreeGenerationShouldNotFail) {
-    atm::common::Tree tree(cache);
-    ASSERT_TRUE(tree.buildAffixTree(ItemTypes::STEM));
-    tree.printTree();
-}
+//TEST_F(AffixTreeTests, StemTreeGenerationShouldNotFail) {
+    //atm::common::Tree tree(cache);
+    //ASSERT_TRUE(tree.buildAffixTree(ItemTypes::STEM));
+    //tree.printTree();
+//}

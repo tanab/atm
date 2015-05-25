@@ -127,7 +127,6 @@ Node *Tree::addElement(const wstring &letters, uint64_t affix_id, uint64_t categ
 
     if (letters.size() == 0 && i == 0) {
         // Add a null letter
-        // TODO: Why do we add null letter? Also, this can never be reached!?
         auto new_node = new LetterNode(L'\0');
         current_node->addChild(new_node);
         current_node = new_node;

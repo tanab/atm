@@ -31,7 +31,7 @@ class Inflections {
             }
 
             auto start_prefix = m_start_letter + start_delimiter;
-            if (part.find_first_of(start_prefix)) {
+            if (part.find_first_of(start_prefix) == std::wstring::size_type(0)) {
                 part = part.substr(start_prefix.size());
                 auto change_list = util::split(part, middle_delimiter);
                 if (change_list.size() != 2) {
@@ -42,8 +42,7 @@ class Inflections {
                 auto rule = change_list[0];
                 auto replacement = change_list[1];
                 auto replacement_without_diactitics = removeDiacritics(replacement);
-//                auto &non_diacritic_field = nonDiacriticField();
-                auto non_diacritic_field = nonDiacriticField();
+                auto &non_diacritic_field = nonDiacriticField();
                 bool non_diacritic = applyStripDiacriticChange();
                 if (m_apply_plus_rules && rule == L"(+1)") {
                     field = replacement + field;
@@ -72,7 +71,6 @@ class Inflections {
     bool m_apply_plus_rules;
 
     virtual bool applyStripDiacriticChange() = 0;
-    /// \todo Is it really safe to return a refernce?
     virtual std::wstring &nonDiacriticField() = 0;
 
   private:
@@ -83,9 +81,9 @@ class Inflections {
 
 const std::wstring Inflections::start_delimiter = L"//";
 const std::wstring Inflections::middle_delimiter = L"||";
-// const std::wstring Inflections::end_delimiter = L"\\\\";
 const std::wstring Inflections::end_delimiter = L"\\";
 
+/// \brief
 class RawDataInflections : protected Inflections {
   public:
     explicit RawDataInflections() : Inflections() { m_start_letter = L'r'; }
