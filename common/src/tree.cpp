@@ -18,14 +18,22 @@ namespace common {
 
 using namespace util;
 
-Tree::Tree(cache::AtmCache *cache)
+Tree::Tree(shared_ptr<cache::AtmCache> cache)
+    : m_cache(cache),
+      m_affix(false),
+      m_last_id(-1),
+      m_letter_nodes(1),
+      m_result_nodes(0),
+      m_base(new LetterNode(L'\0')) {}
+
+Tree::Tree(shared_ptr<cache::AtmCache> cache, const ItemTypes &type)
     : m_cache(cache),
       m_affix(false),
       m_last_id(-1),
       m_letter_nodes(1),
       m_result_nodes(0),
       m_base(new LetterNode(L'\0')) {
-    std::wcout.imbue(std::locale(""));
+    setupForItemType(type);
 }
 
 Tree::~Tree() { delete m_base; }

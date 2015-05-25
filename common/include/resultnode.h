@@ -46,8 +46,8 @@ class ResultNode : public Node {
     virtual wchar_t letter() const override;
 
     /// \copydoc Node::toString
-    virtual std::wstring toString(bool affix = true,
-                                  atm::cache::AtmCache* cache = nullptr) const override;
+    virtual std::wstring toString(
+        bool affix = true, std::shared_ptr<atm::cache::AtmCache> cache = nullptr) const override;
 
     ///
     /// \brief addRawData Adds another raw data item if such doesn't already exist.

@@ -25,7 +25,7 @@ class LetterNode : public Node {
     virtual bool letterNode() const override { return true; }
 
     /// \copydoc Node::toString
-    virtual std::wstring toString(bool, atm::cache::AtmCache *) const override {
+    virtual std::wstring toString(bool, std::shared_ptr<atm::cache::AtmCache>) const override {
         std::wstring retVal = L"--->(";
         retVal += ((m_letter == L'\0' ? L'$' : m_letter));
         retVal.append(L")");

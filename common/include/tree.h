@@ -5,6 +5,7 @@
 #include <types.h>
 
 #include <fstream>
+#include <memory>
 
 namespace atm {
 namespace common {
@@ -15,10 +16,16 @@ namespace common {
 ///
 class Tree {
   public:
+      /// \brief The constructor.
+      ///
+      /// \param cache Cache to use to get the knowledge base data.
+    explicit Tree(std::shared_ptr<atm::cache::AtmCache> cache);
+
+    /// \brief The constructor that constructs given affix type tree.
     ///
-    /// \brief Tree the constructor.
-    ///
-    explicit Tree(atm::cache::AtmCache *cache);
+    /// \param cache Cache to use to get the knowledge base data.
+    /// \param type The item type for which to construct a tree.
+    explicit Tree(std::shared_ptr<atm::cache::AtmCache> cache, const ItemTypes &type);
 
     ///
     /// \brief Tree deleted copy constructor.
@@ -101,7 +108,7 @@ class Tree {
     void printTree();
 
   private:
-    atm::cache::AtmCache *m_cache;
+    std::shared_ptr<atm::cache::AtmCache> m_cache;
     bool m_affix;
     int m_last_id;
     int m_letter_nodes;

@@ -1,9 +1,10 @@
 #pragma once
 
+#include <iostream>
 #include <list>
+#include <memory>
 #include <string>
 #include <vector>
-#include <iostream>
 
 #include <atmcache.h>
 
@@ -65,7 +66,7 @@ class Node {
     /// \return string representation of this node.
     ///
     virtual std::wstring toString(bool affix = false,
-                                  atm::cache::AtmCache *cache = nullptr) const = 0;
+                                  std::shared_ptr<atm::cache::AtmCache> cache = nullptr) const = 0;
 
     ///
     /// \brief hasChildren returns whether this node has children

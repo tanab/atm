@@ -30,7 +30,7 @@ bool ResultNode::letterNode() const { return false; }
 
 wchar_t ResultNode::letter() const { return 0; }
 
-wstring ResultNode::toString(bool affix, atm::cache::AtmCache *cache) const {
+wstring ResultNode::toString(bool affix, std::shared_ptr<atm::cache::AtmCache> cache) const {
     wstring retVal = L"-";
     wstring tmp = affix && cache != nullptr ? cache->categoriesTable()->at(m_previous_category_id - 1).name
                         : to_wstring(m_previous_category_id);
