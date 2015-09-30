@@ -3,7 +3,11 @@ project(atm-test-core)
 
 file(GLOB SOURCES *.cpp)
 
-#include_directories(${atm-core_INCLUDE_DIRS})
+include_directories(${atm-common_INCLUDE_DIRS})
+include_directories(${atm-util_INCLUDE_DIRS})
+include_directories(${atm-cache_INCLUDE_DIRS})
+include_directories(${atm-core_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${GTEST_LIBRARIES})

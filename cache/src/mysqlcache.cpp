@@ -20,7 +20,7 @@ using namespace boost::locale::conv;
 // const string DATABASE_URL = "tcp://127.0.0.1:3306";
 const string DATABASE_URL = "unix:///opt/local/var/run/mysql56/mysqld.sock";
 const string DATABASE_USER = "root";
-const string DATABASE_PASSWORD = "root";
+const string DATABASE_PASSWORD = "";
 const string DATABASE_SCHEMA = "atm";
 
 MySqlCache::MySqlCache() : AtmCache() {
@@ -29,7 +29,9 @@ MySqlCache::MySqlCache() : AtmCache() {
     m_connection->setSchema(DATABASE_SCHEMA);
 }
 
-MySqlCache::~MySqlCache() { m_connection->close(); }
+MySqlCache::~MySqlCache() {
+    m_connection->close();
+}
 
 bool MySqlCache::initCache() {
     call_once(m_once_flag, [this] {
@@ -38,6 +40,7 @@ bool MySqlCache::initCache() {
             m_connection->prepareStatement("SELECT id, name FROM prefix ORDER BY id ASC"));
         unique_ptr<sql::ResultSet> resultSet(statement->executeQuery());
         m_prefix_rows = make_shared<vector<AffixRow>>();
+
         while (resultSet->next()) {
             m_prefix_rows->emplace_back(
                 ItemTypes::PREFIX, resultSet->getUInt64(1),
@@ -45,10 +48,10 @@ bool MySqlCache::initCache() {
         }
 
         // Load stem table
-        statement.reset(m_connection->prepareStatement(
-            "SELECT id, name, grammar_stem_id, sources FROM stem ORDER BY id ASC"));
+        statement.reset(m_connection->prepareStatement("SELECT id, name, grammar_stem_id, sources FROM stem ORDER BY id ASC"));
         resultSet.reset(statement->executeQuery());
         m_stem_rows = make_shared<vector<AffixRow>>();
+
         while (resultSet->next()) {
             m_stem_rows->emplace_back(
                 ItemTypes::STEM, resultSet->getUInt64(1),
@@ -57,11 +60,11 @@ bool MySqlCache::initCache() {
         }
 
         // Load suffix table
-        statement.reset(
-            m_connection->prepareStatement("SELECT id, name FROM suffix ORDER BY id ASC"));
+        statement.reset(m_connection->prepareStatement("SELECT id, name FROM suffix ORDER BY id ASC"));
         resultSet.reset(statement->executeQuery());
 
         m_suffix_rows = make_shared<vector<AffixRow>>();
+
         while (resultSet->next()) {
             m_suffix_rows->emplace_back(
                 ItemTypes::SUFFIX, resultSet->getUInt64(1),
@@ -75,23 +78,24 @@ bool MySqlCache::initCache() {
         resultSet.reset(statement->executeQuery());
         m_prefix_category_rows = make_shared<AffixCategoryMap>();
         m_prefix_category_rows_by_category_id = make_shared<AffixCategoryMap>();
+
         while (resultSet->next()) {
             uint64_t key = resultSet->getUInt64(1);
             uint64_t category_id = resultSet->getUInt64(2);
             m_prefix_category_rows->insert(pair<uint64_t, AffixCategoryRow>(
                 key,
                 AffixCategoryRow(ItemTypes::PREFIX, key, resultSet->getUInt64(2),
-                                 resultSet->getString(3), resultSet->getString(4),
-                                 to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
-                                 to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
-                                 resultSet->getUInt64(7), L"", resultSet->getBoolean(8))));
+            resultSet->getString(3), resultSet->getString(4),
+            to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
+            to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
+            resultSet->getUInt64(7), L"", resultSet->getBoolean(8))));
             m_prefix_category_rows_by_category_id->insert(pair<uint64_t, AffixCategoryRow>(
                 category_id,
                 AffixCategoryRow(ItemTypes::PREFIX, key, resultSet->getUInt64(2),
-                                 resultSet->getString(3), resultSet->getString(4),
-                                 to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
-                                 to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
-                                 resultSet->getUInt64(7), L"", resultSet->getBoolean(8))));
+            resultSet->getString(3), resultSet->getString(4),
+            to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
+            to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
+            resultSet->getUInt64(7), L"", resultSet->getBoolean(8))));
         }
 
         // Load suffix category table
@@ -101,23 +105,24 @@ bool MySqlCache::initCache() {
         resultSet.reset(statement->executeQuery());
         m_suffix_category_rows = make_shared<AffixCategoryMap>();
         m_suffix_category_rows_by_category_id = make_shared<AffixCategoryMap>();
+
         while (resultSet->next()) {
             uint64_t key = resultSet->getUInt64(1);
             uint64_t category_id = resultSet->getUInt64(2);
             m_suffix_category_rows->insert(pair<uint64_t, AffixCategoryRow>(
                 key,
                 AffixCategoryRow(ItemTypes::SUFFIX, key, resultSet->getUInt64(2),
-                                 resultSet->getString(3), resultSet->getString(4),
-                                 to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
-                                 to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
-                                 resultSet->getUInt64(7), L"", resultSet->getBoolean(8))));
+            resultSet->getString(3), resultSet->getString(4),
+            to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
+            to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
+            resultSet->getUInt64(7), L"", resultSet->getBoolean(8))));
             m_suffix_category_rows_by_category_id->insert(pair<uint64_t, AffixCategoryRow>(
                 category_id,
                 AffixCategoryRow(ItemTypes::SUFFIX, key, resultSet->getUInt64(2),
-                                 resultSet->getString(3), resultSet->getString(4),
-                                 to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
-                                 to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
-                                 resultSet->getUInt64(7), L"", resultSet->getBoolean(8))));
+            resultSet->getString(3), resultSet->getString(4),
+            to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
+            to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
+            resultSet->getUInt64(7), L"", resultSet->getBoolean(8))));
         }
 
         // Load stem category table
@@ -127,26 +132,27 @@ bool MySqlCache::initCache() {
         resultSet.reset(statement->executeQuery());
         m_stem_category_rows = make_shared<AffixCategoryMap>();
         m_stem_category_rows_by_category_id = make_shared<AffixCategoryMap>();
+
         while (resultSet->next()) {
             uint64_t key = resultSet->getUInt64(1);
             uint64_t category_id = resultSet->getUInt64(2);
             m_stem_category_rows->insert(pair<uint64_t, AffixCategoryRow>(
                 key, AffixCategoryRow(
-                         ItemTypes::STEM, key, resultSet->getUInt64(2), resultSet->getString(3),
-                         resultSet->getString(4),
-                         to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
-                         to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
-                         resultSet->getUInt64(7),
-                         to_utf<wchar_t>(resultSet->getString(8).asStdString(), "UTF-8"), false)));
+                    ItemTypes::STEM, key, resultSet->getUInt64(2), resultSet->getString(3),
+                    resultSet->getString(4),
+                    to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
+                    to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
+                    resultSet->getUInt64(7),
+                    to_utf<wchar_t>(resultSet->getString(8).asStdString(), "UTF-8"), false)));
             m_stem_category_rows_by_category_id->insert(pair<uint64_t, AffixCategoryRow>(
                 category_id,
                 AffixCategoryRow(ItemTypes::STEM, key, resultSet->getUInt64(2),
-                                 resultSet->getString(3), resultSet->getString(4),
-                                 to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
-                                 to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
-                                 resultSet->getUInt64(7),
-                                 to_utf<wchar_t>(resultSet->getString(8).asStdString(), "UTF-8"),
-                                 false)));
+            resultSet->getString(3), resultSet->getString(4),
+            to_utf<wchar_t>(resultSet->getString(5).asStdString(), "UTF-8"),
+            to_utf<wchar_t>(resultSet->getString(6).asStdString(), "UTF-8"),
+            resultSet->getUInt64(7),
+            to_utf<wchar_t>(resultSet->getString(8).asStdString(), "UTF-8"),
+            false)));
         }
 
         // Load compatibility rules
@@ -157,6 +163,7 @@ bool MySqlCache::initCache() {
         resultSet.reset(statement->executeQuery());
         m_compatibility_rules_rows_1 = make_shared<CompatibilityRulesMap>();
         m_compatibility_rules_rows_2 = make_shared<CompatibilityRulesMap>();
+
         while (resultSet->next()) {
             uint64_t category_id_1 = resultSet->getUInt64(1);
             uint64_t category_id_2 = resultSet->getUInt64(2);
@@ -175,10 +182,10 @@ bool MySqlCache::initCache() {
         }
 
         // Load categories
-        statement.reset(m_connection->prepareStatement(
-            "SELECT id, name, type, sources, abstract FROM category ORDER BY id ASC"));
+        statement.reset(m_connection->prepareStatement("SELECT id, name, type, sources, abstract FROM category ORDER BY id ASC"));
         resultSet.reset(statement->executeQuery());
         m_category_rows = make_shared<CategoryRows>();
+
         while (resultSet->next()) {
             m_category_rows->emplace_back(
                 resultSet->getUInt64(1),
@@ -214,17 +221,24 @@ bool MySqlCache::initCache() {
         // m_compatibility_rules_rows_2->size()
         //<< std::endl;
     });
-
     return true;
 }
 
-const shared_ptr<AffixRows> MySqlCache::prefixTable() const { return m_prefix_rows; }
+const shared_ptr<AffixRows> MySqlCache::prefixTable() const {
+    return m_prefix_rows;
+}
 
-const shared_ptr<AffixRows> MySqlCache::suffixTable() const { return m_suffix_rows; }
+const shared_ptr<AffixRows> MySqlCache::suffixTable() const {
+    return m_suffix_rows;
+}
 
-const shared_ptr<AffixRows> MySqlCache::stemTable() const { return m_stem_rows; }
+const shared_ptr<AffixRows> MySqlCache::stemTable() const {
+    return m_stem_rows;
+}
 
-const shared_ptr<CategoryRows> MySqlCache::categoriesTable() const { return m_category_rows; }
+const shared_ptr<CategoryRows> MySqlCache::categoriesTable() const {
+    return m_category_rows;
+}
 
 const AffixCategoryMapRange MySqlCache::findPrefixCategories(uint64_t prefix_id) const {
     return m_prefix_category_rows->equal_range(prefix_id);
@@ -239,14 +253,17 @@ const AffixCategoryMapRange MySqlCache::findStemCategories(uint64_t stem_id) con
 }
 
 const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t affix_id,
-                                                            const ItemTypes &item_type) const {
+        const ItemTypes &item_type) const {
     switch (item_type) {
         case ItemTypes::PREFIX:
             return findPrefixCategories(affix_id);
+
         case ItemTypes::SUFFIX:
             return findSuffixCategories(affix_id);
+
         case ItemTypes::STEM:
             return findStemCategories(affix_id);
+
         default:
             return AffixCategoryMapRange();
     }
@@ -254,13 +271,17 @@ const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t affix_id,
 
 const AffixCategoryMapRange MySqlCache::findAffixCategories(uint64_t category_id) const {
     ItemTypes type = m_category_rows->at(category_id - 1).type;
+
     switch (type) {
         case ItemTypes::PREFIX:
             return m_prefix_category_rows_by_category_id->equal_range(category_id);
+
         case ItemTypes::STEM:
             return m_stem_category_rows_by_category_id->equal_range(category_id);
+
         case ItemTypes::SUFFIX:
             return m_suffix_category_rows_by_category_id->equal_range(category_id);
+
         default:
             return AffixCategoryMapRange();
     }
@@ -271,10 +292,13 @@ const AffixCategoryMapRange MySqlCache::findAffixCategoriesByCategoryId(
     switch (item_type) {
         case ItemTypes::PREFIX:
             return m_prefix_category_rows_by_category_id->equal_range(category_id);
+
         case ItemTypes::STEM:
             return m_stem_category_rows_by_category_id->equal_range(category_id);
+
         case ItemTypes::SUFFIX:
             return m_suffix_category_rows_by_category_id->equal_range(category_id);
+
         default:
             return AffixCategoryMapRange();
     }
@@ -284,10 +308,13 @@ wstring MySqlCache::findAffixName(const ItemTypes &type, uint64_t affix_id) cons
     switch (type) {
         case ItemTypes::PREFIX:
             return m_prefix_rows->at(affix_id - 1).name;
+
         case ItemTypes::STEM:
             return m_stem_rows->at(affix_id - 1).name;
+
         case ItemTypes::SUFFIX:
             return m_suffix_rows->at(affix_id - 1).name;
+
         default:
             return L"";
     }
@@ -295,34 +322,34 @@ wstring MySqlCache::findAffixName(const ItemTypes &type, uint64_t affix_id) cons
 
 bool MySqlCache::acceptsState(const ItemTypes &type, uint64_t category_id) const {
     bool retVal = false;
+
     // TODO: Are we sure that STEM and SUFFIX are treated the same!?
     if (type == ItemTypes::PREFIX) {
         auto abCheck = m_compatibility_rules_rows_1->find(CompatibilityRulesKey(
-                           category_id, Rules::AB)) != m_compatibility_rules_rows_1->end();
+                category_id, Rules::AB)) != m_compatibility_rules_rows_1->end();
         auto acCheck = m_compatibility_rules_rows_1->find(CompatibilityRulesKey(
-                           category_id, Rules::AC)) != m_compatibility_rules_rows_1->end();
+                category_id, Rules::AC)) != m_compatibility_rules_rows_1->end();
         retVal = abCheck && acCheck;
     } else {
         auto acCheck = m_compatibility_rules_rows_2->find(CompatibilityRulesKey(
-                           category_id, Rules::AC)) != m_compatibility_rules_rows_2->end();
-
+                category_id, Rules::AC)) != m_compatibility_rules_rows_2->end();
         auto bcCheck = m_compatibility_rules_rows_2->find(CompatibilityRulesKey(
-                           category_id, Rules::BC)) != m_compatibility_rules_rows_2->end();
+                category_id, Rules::BC)) != m_compatibility_rules_rows_2->end();
         retVal = acCheck && bcCheck;
     }
+
     return retVal;
 }
 
 bool MySqlCache::hasCompatibleAffixes(const ItemTypes &type, uint64_t category_id) const {
     // TODO: Are we sure that STEM and SUFFIX are treated the same!?
-    return m_compatibility_rules_rows_1->find(CompatibilityRulesKey(
-               category_id, type == ItemTypes::PREFIX ? Rules::AA : Rules::CC)) !=
-           m_compatibility_rules_rows_1->end();
+    return m_compatibility_rules_rows_1->find(
+               CompatibilityRulesKey(category_id,
+                                     type == ItemTypes::PREFIX ? Rules::AA : Rules::CC)) != m_compatibility_rules_rows_1->end();
 }
 
-CompatibilityRulesMapRange MySqlCache::findCompatibilityRules(const Rules &rule,
-                                                              uint64_t category_id,
-                                                              bool first) const {
+CompatibilityRulesMapRange MySqlCache::findCompatibilityRules(const Rules &rule, uint64_t category_id,
+        bool first) const {
     ItemTypes type1;
     ItemTypes type2;
 
@@ -332,12 +359,14 @@ CompatibilityRulesMapRange MySqlCache::findCompatibilityRules(const Rules &rule,
     }
 
     ItemTypes type_of_category = m_category_rows->at(category_id - 1).type;
+
     if ((first ? type1 : type2) != type_of_category) {
         return CompatibilityRulesMapRange(m_compatibility_rules_rows_1->end(),
                                           m_compatibility_rules_rows_1->end());
     }
 
     CompatibilityRulesKey key(category_id, rule);
+
     if (first) {
         return m_compatibility_rules_rows_1->equal_range(key);
     } else {

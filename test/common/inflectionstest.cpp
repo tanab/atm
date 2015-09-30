@@ -12,15 +12,15 @@ using namespace std;
 using namespace boost;
 
 class AffixTreeTests : public ::testing::Test {
-  protected:
-    virtual void SetUp() {
-        if (!cache) {
-            cache = std::make_shared<atm::cache::MySqlCache>();
-            cache->initCache();
+    protected:
+        virtual void SetUp() {
+            if (!cache) {
+                cache = std::make_shared<atm::cache::MySqlCache>();
+                cache->initCache();
+            }
         }
-    }
 
-    static std::shared_ptr<atm::cache::MySqlCache> cache;
+        static std::shared_ptr<atm::cache::MySqlCache> cache;
 };
 
 std::shared_ptr<atm::cache::MySqlCache> AffixTreeTests::cache;
@@ -42,8 +42,8 @@ TEST_F(AffixTreeTests, SuffixTreeGenerationShouldNotFail) {
     tree.printTree();
 }
 
-// TEST_F(AffixTreeTests, StemTreeGenerationShouldNotFail) {
-// atm::common::Tree tree(cache);
-// ASSERT_TRUE(tree.buildAffixTree(ItemTypes::STEM));
-// tree.printTree();
-//}
+TEST_F(AffixTreeTests, StemTreeGenerationShouldNotFail) {
+    atm::common::Tree tree(cache);
+    ASSERT_TRUE(tree.buildAffixTree(ItemTypes::STEM));
+    tree.printTree();
+}
